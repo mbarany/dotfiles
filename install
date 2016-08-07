@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Dependencies
+command -v brew >/dev/null 2>&1 || { echo >&2 "Homebrew not found. Please install it from http://brew.sh/"; exit 1; }
+command -v gpg >/dev/null 2>&1 || { echo >&2 "GPG Tools not found. Please install it from https://gpgtools.org/"; exit 1; }
+
+# Install
+brew install \
+	node \
+	bash-completion \
+	gh \
+	awscli \
+	jq \
+	oniguruma \
+	keybase \
+	android-sdk
+
+# More Bash Completion
+brew tap homebrew/completions
+brew install composer-completion gem-completion open-completion vagrant-completion
+
+npm -g install \
+	http-server \
+	kkpoon-pushbullet-cli
+
+# Copy gitconfig template
+cp -i ~/.dotfiles/.gitconfig ~/.gitconfig
+
+# Add Symlinks
+ln -svi ~/.dotfiles/.hushlogin ~/.hushlogin
+ln -svi ~/.dotfiles/.curlrc ~/.curlrc
+ln -svi ~/.dotfiles/.inputrc ~/.inputrc
+ln -svi ~/.dotfiles/.bashrc ~/.bashrc
+ln -svi ~/.dotfiles/.bash_profile ~/.bash_profile
+
+# Setup global gitconfig
+echo "Setting Global Git Config..."
+
+echo "Git Author Name:"
+read git_user_name
+if [ -n "${git_user_name}" ]; then
+    git config --global user.name "$git_user_name"
+fi
+
+echo "Git Author Email:"
+read git_user_email
+if [ -n "${git_user_email}" ]; then
+    git config --global user.email "$git_user_email"
+fi

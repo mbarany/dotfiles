@@ -1,0 +1,4 @@
+# File system ignores
+._*
+.Trash*
+.DS_Store

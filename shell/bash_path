@@ -1,0 +1,8 @@
+#!/bin/bash
+
+[[ -d /usr/local/bin ]] && PATH="/usr/local/bin:$PATH"
+
+[[ -d ~/.dotfiles/bin ]] && PATH="~/.dotfiles/bin:$PATH"
+
+[[ -d ~/.local/bin ]] && PATH="~/.local/bin:$PATH"
+
