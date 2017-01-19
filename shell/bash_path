@@ -1,8 +1,12 @@
 #!/bin/bash
 
+ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+
 [[ -d /usr/local/bin ]] && PATH="/usr/local/bin:$PATH"
 
-[[ -d ~/.dotfiles/bin ]] && PATH="~/.dotfiles/bin:$PATH"
+[[ -d $ROOT_DIR/bin ]] && PATH="$ROOT_DIR/bin:$PATH"
 
-[[ -d ~/.local/bin ]] && PATH="~/.local/bin:$PATH"
+[[ -d $HOME/.composer/vendor/bin ]] && PATH="$HOME/.composer/vendor/bin:$PATH"
+
+[[ -d $HOME/.local/bin ]] && PATH="$HOME/.local/bin:$PATH"
 
