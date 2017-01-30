@@ -2,7 +2,6 @@
 
 ## Dependencies
 - [Homebrew](http://brew.sh/)
-- [GPG](https://gpgtools.org/)
 
 ## Installation
 ```bash
@@ -12,7 +11,6 @@ git clone git@github.com:mbarany/dotfiles.git ~/.dotfiles
 
 ## Other Apps
 Other apps to install on a new machine
-- [Docker](https://docs.docker.com/docker-for-mac/#/installing-bash-completion)
 - [Android Studio](https://developer.android.com/studio/install.html)
 
 ## Other Setup
@@ -22,7 +20,7 @@ Other apps to install on a new machine
 License
 =======
 
-    Copyright 2016 Michael Barany
+    Copyright 2016-2017 Michael Barany
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

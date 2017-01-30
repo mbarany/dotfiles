@@ -33,7 +33,22 @@ brew install \
 
 # More Bash Completion
 brew tap homebrew/completions
-brew install composer-completion gem-completion open-completion vagrant-completion
+brew install \
+	composer-completion \
+	gem-completion \
+	open-completion \
+	vagrant-completion
+
+# Docker Bash Completion
+if [ -f /Applications/Docker.app/Contents/Resources/etc/docker.bash-completion ]; then
+		ln -svi /Applications/Docker.app/Contents/Resources/etc/docker.bash-completion /usr/local/etc/bash_completion.d/docker
+fi
+if [ -f /Applications/Docker.app/Contents/Resources/etc/docker-machine.bash-completion ]; then
+		ln -svi /Applications/Docker.app/Contents/Resources/etc/docker-machine.bash-completion /usr/local/etc/bash_completion.d/docker-machine
+fi
+if [ -f /Applications/Docker.app/Contents/Resources/etc/docker-compose.bash-completion ]; then
+		ln -svi /Applications/Docker.app/Contents/Resources/etc/docker-compose.bash-completion /usr/local/etc/bash_completion.d/docker-compose
+fi
 
 npm -g install \
 	http-server \
