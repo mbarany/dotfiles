@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Delete all branches that have been merged to master or specified merge branch && push deletes to remote origin
 
 CHECK_ORIGIN=$(git remote -v | grep '^origin.\+(push)$')

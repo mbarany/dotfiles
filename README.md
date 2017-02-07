@@ -5,16 +5,23 @@
 
 ## Installation
 ```bash
-git clone git@github.com:mbarany/dotfiles.git ~/.dotfiles
+git clone --recursive https://github.com/mbarany/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
 ```
 
-## Other Apps
-Other apps to install on a new machine
-- [Android Studio](https://developer.android.com/studio/install.html)
+## Updating
+The install script is used for updates as well. It is idempotent so you need not worry about running it multiple times.
+```bash
+cd ~/.dotfiles && git pull --recurse-submodules origin master
+~/.dotfiles/install
+```
 
 ## Other Setup
-- [Git Signing Key](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work)
+- [Git PGP Signing Key](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work)
+
+## Usage
+### [git-include-config](bin/git-include-config)
+This command will let you choose a gitconfig include for the local git repo. It searches your home directory for files that match the pattern `git-config-*`. This essentially lets you have multiple gitconfig global files. For example you could have `git-config-personal` and `git-config-work` which contains your personal email and work email respectively.
 
 
 License
@@ -33,4 +40,3 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-

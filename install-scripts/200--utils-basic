@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+brew install \
+		node \
+		composer \
+		bash-completion \
+		hub \
+		awscli \
+		jq \
+		oniguruma \
+		keybase
+
+npm -g install \
+		http-server \
+		kkpoon-pushbullet-cli

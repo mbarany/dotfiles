@@ -8,11 +8,11 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
 	source $(brew --prefix)/etc/bash_completion
 fi
 # for f in $(brew --prefix)/etc/bash_completion.d/*; do [[ -f "$f" ]] && source $f; done
-for f in ~/.dotfiles/completion/*; do [[ -f "$f" ]] && source $f; done
+for f in $HOME/.dotfiles/completion/*; do [[ -f "$f" ]] && source $f; done
 unset f
 
 # Various shell files
-for f in ~/.dotfiles/shell/*; do [[ -f "$f" ]] && source $f; done
+for f in $HOME/.dotfiles/shell/*; do [[ -f "$f" ]] && source $f; done
 unset f
 
 # Android SDK
@@ -21,7 +21,7 @@ if [ -d /usr/local/opt/android-sdk ]; then
 fi
 
 # load a local specific sources before the scripts
-[[ -f ~/.local/bashrc ]] && source ~/.local/bashrc
+[[ -f $HOME/.local/bashrc ]] && source $HOME/.local/bashrc
 
 # set $EDITOR to vi(m) if not already set
 [[ -z $EDITOR ]] && EDITOR=$(type vim &> /dev/null && echo vim || echo vi)

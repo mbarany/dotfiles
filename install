@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Current script dir
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -6,79 +6,18 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Dependencies
 command -v brew >/dev/null 2>&1 || { echo >&2 "Homebrew not found. Please install it from http://brew.sh/"; exit 1; }
 
-# Install Cask Apps
-if [ ! -f "/Applications/Google Chrome.app" ]; then
-		brew cask install google-chrome
-fi
-brew cask install \
-	shiftit \
-	gpgtools \
-	postman \
-	psequel
+set -x
 
-# Development
-brew install \
-	php70 --with-phpdbg \
-	php70-mcrypt \
-	node
+# Idempotent Install
+for f in $DIR/install-scripts/*; do [[ -f "$f" ]] && source $f; done
+unset f
 
-# Utils
-brew install \
-	bash-completion \
-	hub \
-	awscli \
-	jq \
-	oniguruma \
-	keybase \
-	android-sdk
-
-# More Bash Completion
-brew tap homebrew/completions
-brew install \
-	composer-completion \
-	gem-completion \
-	open-completion \
-	vagrant-completion
-
-# Docker Bash Completion
-if [ -f /Applications/Docker.app/Contents/Resources/etc/docker.bash-completion ]; then
-		ln -svi /Applications/Docker.app/Contents/Resources/etc/docker.bash-completion /usr/local/etc/bash_completion.d/docker
-fi
-if [ -f /Applications/Docker.app/Contents/Resources/etc/docker-machine.bash-completion ]; then
-		ln -svi /Applications/Docker.app/Contents/Resources/etc/docker-machine.bash-completion /usr/local/etc/bash_completion.d/docker-machine
-fi
-if [ -f /Applications/Docker.app/Contents/Resources/etc/docker-compose.bash-completion ]; then
-		ln -svi /Applications/Docker.app/Contents/Resources/etc/docker-compose.bash-completion /usr/local/etc/bash_completion.d/docker-compose
-fi
-
-npm -g install \
-	http-server \
-	kkpoon-pushbullet-cli
+# Local
+[[ -f "$HOME/.local/install" ]] && source $HOME/.local/install;
 
 # Add Symlinks
-ln -svi $DIR/.hushlogin ~/.hushlogin
-ln -svi $DIR/.curlrc ~/.curlrc
-ln -svi $DIR/.inputrc ~/.inputrc
-ln -svi $DIR/.bashrc ~/.bashrc
-ln -svi $DIR/.bash_profile ~/.bash_profile
-
-
-# Setup global gitconfig
-if [ ! -f ~/.gitconfig ]; then
-		echo "Setting Global Git Config..."
-
-		# Copy gitconfig template
-		cp -i $DIR/.gitconfig ~/.gitconfig
-
-		echo "Git Author Name:"
-		read git_user_name
-		if [ -n "${git_user_name}" ]; then
-		    git config --global user.name "$git_user_name"
-		fi
-
-		echo "Git Author Email:"
-		read git_user_email
-		if [ -n "${git_user_email}" ]; then
-		    git config --global user.email "$git_user_email"
-		fi
-fi
+ln -svi $DIR/.hushlogin $HOME/.hushlogin
+ln -svi $DIR/.curlrc $HOME/.curlrc
+ln -svi $DIR/.inputrc $HOME/.inputrc
+ln -svi $DIR/.bashrc $HOME/.bashrc
+ln -svi $DIR/.bash_profile $HOME/.bash_profile

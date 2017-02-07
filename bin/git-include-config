@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+echo "Enter the gitconfig file you want to include locally:"
+
+select FILENAME in $HOME/.gitconfig-*;
+do
+    # Exit if no file was chosen
+    [[ -z "$FILENAME" ]] && exit 1
+
+    echo "You picked $FILENAME ($REPLY)"
+    git config include.path "$FILENAME"
+    exit 0
+done
