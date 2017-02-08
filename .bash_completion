@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+USER_COMPLETION_DIR="$(dirname $(readlink $HOME/.bash_completion))/bash_completion.d"
+
+for f in $USER_COMPLETION_DIR/*; do [[ -f "$f" ]] && source $f; done
+unset f

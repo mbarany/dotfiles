@@ -21,3 +21,4 @@ ln -svi $DIR/.curlrc $HOME/.curlrc
 ln -svi $DIR/.inputrc $HOME/.inputrc
 ln -svi $DIR/.bashrc $HOME/.bashrc
 ln -svi $DIR/.bash_profile $HOME/.bash_profile
+ln -svi $DIR/.bash_completion $HOME/.bash_completion
