@@ -5,6 +5,11 @@
 
 DOTFILES_DIR="$(dirname $(readlink $HOME/.bashrc))"
 
+# Android SDK
+if [ -d $HOME/Library/Android/sdk ]; then
+	export ANDROID_HOME=$HOME/Library/Android/sdk
+fi
+
 # Completion options
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
 	source $(brew --prefix)/etc/bash_completion
@@ -13,11 +18,6 @@ fi
 # Various shell files
 for f in $DOTFILES_DIR/shell/*; do [[ -f "$f" ]] && source $f; done
 unset f
-
-# Android SDK
-if [ -d $HOME/Library/Android/sdk ]; then
-	export ANDROID_HOME=$HOME/Library/Android/sdk
-fi
 
 # load a local specific sources before the scripts
 [[ -f $HOME/.local/bashrc ]] && source $HOME/.local/bashrc

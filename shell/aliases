@@ -90,8 +90,15 @@ alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resource
 alias reload="exec $SHELL -l"
 
 # Git
-alias wip="git add -A && git commit -m 'WIP'"
-alias unwip="git reset HEAD~1"
+alias wip="git add -A && git commit --no-verify --no-gpg-sign -m 'WIP'"
+function unwip {
+  local last_msg=$(git log -1 --pretty=%B)  
+  if [ "$last_msg" = "WIP" ]; then
+    git reset HEAD~1
+  else
+    echo 'Last commit is not a WIP!'
+  fi
+}
 
 # NPM
 alias npm-list-globals="npm -g ls --depth 0"
