@@ -14,5 +14,4 @@ brew cask install \
 		android-studio \
 		docker \
 		gpgtools \
-		postman \
-		ndm
+		postman

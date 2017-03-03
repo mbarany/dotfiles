@@ -3,6 +3,7 @@
 brew install \
 		git \
 		node \
+		go \
 		composer \
 		bash-completion \
 		hub \

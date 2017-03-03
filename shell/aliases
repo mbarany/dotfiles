@@ -105,4 +105,7 @@ alias npm-list-globals="npm -g ls --depth 0"
 
 # AWS
 alias aws-list="aws ec2 describe-instances | jq -r '.Reservations[].Instances[] | \"\(.Tags | map(select(.Key == \"Name\"))[].Value) || \(.State.Name) || \(.PublicDnsName)\"' | column -s $'\t' -t -s '||' | sort"
+aws-sync-bucket () {
+	aws s3 sync s3://$1 ./$1
+}
 

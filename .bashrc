@@ -10,6 +10,11 @@ if [ -d $HOME/Library/Android/sdk ]; then
 	export ANDROID_HOME=$HOME/Library/Android/sdk
 fi
 
+# Go
+if [ -d $HOME/go ]; then
+    export GOPATH=$HOME/go
+fi
+
 # Completion options
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
 	source $(brew --prefix)/etc/bash_completion
