@@ -24,12 +24,10 @@ fi
 for f in $DOTFILES_DIR/shell/*; do [[ -f "$f" ]] && source $f; done
 unset f
 
-# load a local specific sources before the scripts
+# load a local specific sources last
 [[ -f $HOME/.local/bashrc ]] && source $HOME/.local/bashrc
 
-# set $EDITOR to vi(m) if not already set
-[[ -z $EDITOR ]] && EDITOR=$(type vim &> /dev/null && echo vim || echo vi)
-export EDITOR=$EDITOR
+unset DOTFILES_DIR
 
 # exit with a success status code
 return 0

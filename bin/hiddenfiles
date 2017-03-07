@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+CMD=${1:-show}
+
+function show {
+    defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder
+}
+
+function hide {
+    defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder
+}
+
+case "$CMD" in
+    show)
+        show
+        ;;
+    hide)
+        hide
+        ;;
+    *)
+        echo "Unknown command: $CMD"
+        exit 1
+        ;;
+esac
+exit 0

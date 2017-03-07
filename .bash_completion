@@ -1,6 +1,9 @@
-#!/usr/bin/env bash
+DOT_FILES_DIR=$(dirname $(readlink $HOME/.bash_completion))
 
-USER_COMPLETION_DIR="$(dirname $(readlink $HOME/.bash_completion))/bash_completion.d"
-
-for f in $USER_COMPLETION_DIR/*; do [[ -f "$f" ]] && source $f; done
+for f in $DOT_FILES_DIR/bash_completion.d/*; do [[ -f "$f" ]] && source $f; done
 unset f
+
+for f in $HOME/.local/bash_completion.d/*; do [[ -f "$f" ]] && source $f; done
+unset f
+
+unset DOT_FILES_DIR

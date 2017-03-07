@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # Sourced from https://github.com/necolas/dotfiles
 
 # Example:
@@ -137,9 +135,12 @@ set_prompts() {
     PS1+="\$(prompt_git \"$white on $cyan\")" # git repository details
     PS1+="\n"
     PS1+="\[$reset$white\]\$ \[$reset\]" # $ (and reset color)
-
-    export PS1
 }
 
 set_prompts
+
+# Make new shells get the history lines from all previous
+# shells instead of the default "last window closed" history
+PROMPT_COMMAND="history -a"
+
 unset set_prompts

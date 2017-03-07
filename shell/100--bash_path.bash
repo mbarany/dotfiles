@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
-
-ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
-
 [[ -d /usr/local/bin ]] && PATH="/usr/local/bin:$PATH"
 
 [[ -n "$ANDROID_HOME" ]] && PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$PATH"
@@ -10,9 +6,9 @@ ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 
 [[ -d $HOME/.composer/vendor/bin ]] && PATH="$HOME/.composer/vendor/bin:$PATH"
 
-[[ -d $ROOT_DIR/bin ]] && PATH="$ROOT_DIR/bin:$PATH"
+[[ -d $DOTFILES_DIR/bin ]] && PATH="$DOTFILES_DIR/bin:$PATH"
 
 [[ -d $HOME/.local/bin ]] && PATH="$HOME/.local/bin:$PATH"
 
 # Remove duplicates from PATH
-export PATH=$(echo "$PATH" | awk -v RS=':' -v ORS=":" '!a[$1]++')
+PATH=$(echo "$PATH" | awk -v RS=':' -v ORS=":" '!a[$1]++')

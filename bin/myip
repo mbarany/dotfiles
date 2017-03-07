@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+CMD=${1:-public}
+
+function ip-public {
+    dig +short myip.opendns.com @resolver1.opendns.com
+}
+
+function ip-local {
+    ipconfig getifaddr en0
+}
+
+function ip-all {
+    ifconfig | grep -Eo 'inet6? (addr:)?([0-9a-fA-F\.\:])*' | awk '{ sub(/inet6? (addr:)? ?/, ""); print }'
+}
+
+case "$CMD" in
+    public)
+        ip-public
+        ;;
+    local)
+        ip-local
+        ;;
+    all)
+        ip-all
+        ;;
+    *)
+        echo "Unknown command: $CMD"
+        exit 1
+        ;;
+esac
+exit 0

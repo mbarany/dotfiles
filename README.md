@@ -1,28 +1,43 @@
 # Michael Barany's dotfiles
+This collection of dotfiles is meant to be installed and be upgradeable.
+
+
+# Installation
 
 ## Dependencies
-- [Homebrew](http://brew.sh/)
+ - [Homebrew](http://brew.sh/)
 
-## Installation
 ```bash
 git clone --recursive https://github.com/mbarany/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
 ```
 
-## Updating
+## Other Setup
+ - [Git PGP Signing Key](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work)
+
+## Custom / Local dotfiles
+ - See [Local Directory Structure](#local-directory-structure)
+
+
+# Updating
 The install script is used for updates as well. It is idempotent so you need not worry about running it multiple times.
 ```bash
 cd ~/.dotfiles && git pull --recurse-submodules origin master
 ~/.dotfiles/install
 ```
 
-## Other Setup
-- [Git PGP Signing Key](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work)
 
-## Usage
-### [git-include-config](bin/git-include-config)
-This command will let you choose a gitconfig include for the local git repo. It searches your home directory for files that match the pattern `git-config-*`. This essentially lets you have multiple gitconfig global files. For example you could have `git-config-personal` and `git-config-work` which contains your personal email and work email respectively.
+# Usage
+ - [Scripts](bin/README.md)
+ - [Aliases](shell/700--aliases.bash)
 
+
+# Local Directory Structure
+ - `~/.local/bashrc` - Place custom aliases, exports, etc in this file
+ - `~/.local/bin/` - Place any custom scripts in this directory
+ - `~/.local/bash_completion.d/` - Place any custom bash_completion files in this directory
+ - `~/.local/backup-to` - Hook from [backup-to](bin/backup-to) to backup any custom files and directories
+ - `~/.local/install` - Hook from [install](install) to install anything custom
 
 License
 =======
