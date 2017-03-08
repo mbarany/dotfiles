@@ -1,4 +1,6 @@
 # Michael Barany's dotfiles
+[![license](https://img.shields.io/github/license/mbarany/dotfiles.svg)](http://github.com/mbarany/dotfiles/blob/master/LICENSE)
+
 This collection of dotfiles is meant to be installed and be upgradeable.
 
 
