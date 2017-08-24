@@ -141,6 +141,6 @@ set_prompts
 
 # Make new shells get the history lines from all previous
 # shells instead of the default "last window closed" history
-PROMPT_COMMAND="history -a"
+PROMPT_COMMAND='history -a;'
 
 unset set_prompts

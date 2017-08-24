@@ -19,6 +19,9 @@ alias sudo='sudo '
 # Get week number
 alias week='date +%V'
 
+# Get ISO-8601 date
+alias date-iso8601="date +%Y-%m-%dT%H:%M:%S%z"
+
 # Stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
 
