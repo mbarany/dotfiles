@@ -11,4 +11,13 @@
 [[ -d $HOME/.local/bin ]] && PATH="$HOME/.local/bin:$PATH"
 
 # Remove duplicates from PATH
-PATH=$(echo "$PATH" | awk -v RS=':' -v ORS=":" '!a[$1]++')
+remove_dups() {
+    local D=${2:-:} path= dir=
+    while IFS= read -d$D dir; do
+        [[ $path$D =~ .*$D$dir$D.* ]] || path+="$D$dir"
+    done <<< "$1$D"
+    printf %s "${path#$D}"
+}
+PATH=$(remove_dups "$PATH")
+
+unset -f remove_dups
