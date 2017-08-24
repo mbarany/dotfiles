@@ -10,6 +10,13 @@
 
 [[ -d $HOME/.local/bin ]] && PATH="$HOME/.local/bin:$PATH"
 
+# Local Composer Binaries
+PATH="./vendor/bin:$PATH"
+
+# Local Node Binaries
+PATH="./.node_modules/.bin:$PATH"
+
+
 # Remove duplicates from PATH
 remove_dups() {
     local D=${2:-:} path= dir=
