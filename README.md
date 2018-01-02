@@ -38,7 +38,7 @@ cd ~/.dotfiles && git pull --recurse-submodules origin master
  - `~/.local/bashrc` - Place custom aliases, exports, etc in this file
  - `~/.local/bin/` - Place any custom scripts in this directory
  - `~/.local/bash_completion.d/` - Place any custom bash_completion files in this directory
- - `~/.local/backup-to` - Hook from [backup-to](bin/backup-to) to backup any custom files and directories
+ - `~/.local/backup-scripts` - Hook from [backup-configs](bin/backup-configs) to backup any custom files and directories
  - `~/.local/install` - Hook from [install](install) to install anything custom
 
 License

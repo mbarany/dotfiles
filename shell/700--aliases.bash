@@ -1,5 +1,3 @@
-# List all files colorized in long format
-alias l="ls -lF -G"
 # List all files colorized in long format, including dot files
 alias la="ls -laF -G"
 # List only directories
@@ -21,6 +19,9 @@ alias week='date +%V'
 
 # Get ISO-8601 date
 alias date-iso8601="date +%Y-%m-%dT%H:%M:%S%z"
+
+# UUID
+alias uuidgen='uuidgen | tr "[:upper:]" "[:lower:]"'
 
 # Stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
@@ -65,6 +66,7 @@ function unwip {
         echo 'Last commit is not a WIP!'
     fi
 }
+alias git=hub
 
 # NPM
 alias npm-list-globals="npm -g ls --depth 0"

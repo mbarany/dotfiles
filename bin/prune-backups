@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+BACKUP_DIR="${HOME}/backups"
+NUM_TO_KEEP=5
+
+if [ ! -d "$BACKUP_DIR" ]; then
+    echo "No backups to prune"
+    exit 1
+fi
+
+FILES=$(ls -r $BACKUP_DIR)
+i=0
+for f in $FILES; do
+    if [ "$i" -lt 5 ]; then
+        ((i++))
+        continue
+    else
+        echo "Removing ${BACKUP_DIR}/${f}..."
+        rm -rf ${BACKUP_DIR}/${f}
+    fi
+done
+
+echo "Done."

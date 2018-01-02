@@ -14,7 +14,7 @@
 PATH="./vendor/bin:$PATH"
 
 # Local Node Binaries
-PATH="./.node_modules/.bin:$PATH"
+PATH="./node_modules/.bin:$PATH"
 
 
 # Remove duplicates from PATH

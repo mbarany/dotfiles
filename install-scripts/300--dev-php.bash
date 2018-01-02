@@ -1,8 +1,8 @@
 function install_php() {
     brew install \
-        php70 --with-phpdbg \
-        php70-xdebug \
-        php70-mcrypt
+        php71 --with-phpdbg \
+        php71-xdebug \
+        php71-mcrypt
 }
 
 read -r -p "Do you want to install PHP locally? [y/N] " response

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Current script dir
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Dependencies
 command -v brew >/dev/null 2>&1 || { echo >&2 "Homebrew not found. Please install it from http://brew.sh/"; exit 1; }
@@ -9,16 +9,18 @@ command -v brew >/dev/null 2>&1 || { echo >&2 "Homebrew not found. Please instal
 set -x
 
 # Idempotent Install
-for f in $DIR/install-scripts/*; do [[ -f "$f" ]] && source $f; done
+for f in $DOTFILES_DIR/install-scripts/*; do [[ -f "$f" ]] && source $f; done
 unset f
 
 # Local
 [[ -f "$HOME/.local/install" ]] && source $HOME/.local/install;
 
 # Add Symlinks
-ln -svi $DIR/.hushlogin $HOME/.hushlogin
-ln -svi $DIR/.curlrc $HOME/.curlrc
-ln -svi $DIR/.inputrc $HOME/.inputrc
-ln -svi $DIR/.bashrc $HOME/.bashrc
-ln -svi $DIR/.bash_profile $HOME/.bash_profile
-ln -svi $DIR/.bash_completion $HOME/.bash_completion
+ln -svi $DOTFILES_DIR/.hushlogin $HOME/.hushlogin
+ln -svi $DOTFILES_DIR/.curlrc $HOME/.curlrc
+ln -svi $DOTFILES_DIR/.inputrc $HOME/.inputrc
+ln -svi $DOTFILES_DIR/.bashrc $HOME/.bashrc
+ln -svi $DOTFILES_DIR/.bash_profile $HOME/.bash_profile
+ln -svi $DOTFILES_DIR/.bash_completion $HOME/.bash_completion
+
+unset DOTFILES_DIR

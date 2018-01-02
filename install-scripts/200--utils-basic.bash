@@ -1,6 +1,8 @@
 brew install \
     git \
     node \
+    yarn \
+    n \
     go \
     composer \
     bash-completion \

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+TS=$(date +"%s")
+BACKUP_DIR="${HOME}/backups/${TS}"
+
+VISCOSITY_PATH="${HOME}/Library/Application Support/Viscosity/OpenVPN"
+
+echo "=== Backing up to $BACKUP_DIR ==="
+
+mkdir -vp $BACKUP_DIR
+
+# Backup List
+echo "~/.ssh"
+cp -pR $HOME/.ssh $BACKUP_DIR
+echo "~/.local"
+cp -pR $HOME/.local $BACKUP_DIR
+echo "~/.gitconfig*"
+cp -pR $HOME/.gitconfig* $BACKUP_DIR
+echo "~/.hyper*"
+cp -pR $HOME/.hyper* $BACKUP_DIR
+
+echo "Viscosity Configs"
+if [ -d "$VISCOSITY_PATH" ]; then
+    mkdir "${BACKUP_DIR}/viscosity"
+    cd "$VISCOSITY_PATH"
+    for d in *; do
+        cp -p "${VISCOSITY_PATH}/${d}/config.conf" ${BACKUP_DIR}/viscosity/${d}-config.conf
+    done
+fi
+
+echo "Local Extras"
+[[ -f "$HOME/.local/backup-scripts" ]] && $HOME/.local/backup-scripts $BACKUP_DIR
+
+echo "=== Backup Completed ==="
