@@ -60,3 +60,8 @@
     ps = !"git pull; git submodule foreach git submodule update --init --recursive && true"
     # Push the current branch to origin with the same branch name
     pob = !"git push "$@" origin $(git brn) && true"
+    
+    ### Github
+
+    # Open a Github PR
+    pr = !"git fetch && hub pull-request"

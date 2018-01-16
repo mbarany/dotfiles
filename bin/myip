@@ -3,7 +3,7 @@
 CMD=${1:-public}
 
 function ip-public {
-    dig +short myip.opendns.com @resolver1.opendns.com
+    curl 'https://api.ipify.org?format=text'
 }
 
 function ip-local {
