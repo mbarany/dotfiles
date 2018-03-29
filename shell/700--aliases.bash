@@ -42,16 +42,18 @@ alias c="tr -d '\n' | pbcopy"
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 
-# Hide/show all desktop icons (useful when presenting)
-alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
-alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+if [ "$DOTFILES_OS" == "Darwin" ]; then
+  # Hide/show all desktop icons (useful when presenting)
+  alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+  alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
-# Ring the terminal bell, and put a badge on Terminal.app’s Dock icon
-# (useful when executing time-consuming commands)
-alias badge="tput bel"
+  # Ring the terminal bell, and put a badge on Terminal.app’s Dock icon
+  # (useful when executing time-consuming commands)
+  alias badge="tput bel"
 
-# Lock the screen (when going AFK)
-alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+  # Lock the screen (when going AFK)
+  alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+fi
 
 # Reload the shell (i.e. invoke as a login shell)
 alias reload="exec $SHELL -l"
@@ -66,7 +68,9 @@ function unwip {
         echo 'Last commit is not a WIP!'
     fi
 }
-alias git=hub
+if command -v hub 2>/dev/null; then
+  alias git=hub
+fi
 
 # NPM
 alias npm-list-globals="npm -g ls --depth 0"
@@ -74,6 +78,6 @@ alias npm-list-globals="npm -g ls --depth 0"
 # AWS
 alias aws-list="aws ec2 describe-instances | jq -r '.Reservations[].Instances[] | \"\(.Tags | map(select(.Key == \"Name\"))[].Value) || \(.State.Name) || \(.PublicDnsName)\"' | column -s $'\t' -t -s '||' | sort"
 aws-sync-bucket () {
-    local bucket_name=$1
+  local bucket_name=$1
 	aws s3 sync s3://${bucket_name} ./${bucket_name}
 }

@@ -18,6 +18,10 @@ export HISTSIZE=10000
 # Don't clear the screen after quitting a manual page
 export MANPAGER="less -X"
 
+if [ "$DOTFILES_OS" == "Linux" ]; then
+  export COMMAND_NOT_FOUND_INSTALL_PROMPT=1
+fi
+
 export PATH
 export PROMPT_COMMAND
 export PS1

@@ -4,6 +4,7 @@
 [ -z "$PS1" ] && return
 
 DOTFILES_DIR="$(dirname $(readlink $HOME/.bashrc))"
+DOTFILES_OS="$(uname -s)"
 
 # Android SDK
 if [ -d $HOME/Library/Android/sdk ]; then
@@ -16,8 +17,10 @@ if [ -d $HOME/go ]; then
 fi
 
 # Completion options
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-	source $(brew --prefix)/etc/bash_completion
+if [ "$DOTFILES_OS" == "Darwin" ]; then
+	if [ -f $(brew --prefix)/etc/bash_completion ]; then
+		source $(brew --prefix)/etc/bash_completion
+	fi
 fi
 
 # Various shell files

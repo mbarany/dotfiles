@@ -2,14 +2,20 @@
 
 # Current script dir
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DOTFILES_OS="$(uname -s)"
 
 # Dependencies
-command -v brew >/dev/null 2>&1 || { echo >&2 "Homebrew not found. Please install it from http://brew.sh/"; exit 1; }
+#command -v brew >/dev/null 2>&1 || { echo >&2 "Homebrew not found. Please install it from http://brew.sh/"; exit 1; }
 
 set -x
 
 # Idempotent Install
 for f in $DOTFILES_DIR/install-scripts/*; do [[ -f "$f" ]] && source $f; done
+if [ "$DOTFILES_OS" == "Darwin" ]; then
+  for f in $DOTFILES_DIR/install-scripts/osx/*; do [[ -f "$f" ]] && source $f; done
+elif [ "$DOTFILES_OS" == "Linux" ]; then
+  for f in $DOTFILES_DIR/install-scripts/linux/*; do [[ -f "$f" ]] && source $f; done
+fi
 unset f
 
 # Local
