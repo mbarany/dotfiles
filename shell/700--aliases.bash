@@ -68,7 +68,7 @@ function unwip {
         echo 'Last commit is not a WIP!'
     fi
 }
-if command -v hub 2>/dev/null; then
+if command -v hub > /dev/null; then
   alias git=hub
 fi
 
