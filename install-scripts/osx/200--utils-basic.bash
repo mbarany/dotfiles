@@ -9,7 +9,8 @@ brew install \
     hub \
     awscli \
     jq \
-    oniguruma
+    oniguruma \
+    khell/homebrew-srm/srm \
 
 npm -g install \
     http-server \
