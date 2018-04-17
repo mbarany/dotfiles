@@ -1,7 +1,3 @@
-if [ ! -f "/Applications/Google Chrome.app" ]; then
-    brew cask install google-chrome
-fi
-
 brew cask install \
     shiftit \
     hyper \
