@@ -4,8 +4,6 @@ brew cask install \
     rowanj-gitx \
     jiggler \
     atom \
-    phpstorm \
-    android-studio \
     docker \
     gpgtools \
     keybase \

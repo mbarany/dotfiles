@@ -13,4 +13,3 @@ brew install \
 
 npm -g install \
     http-server \
-    kkpoon-pushbullet-cli
