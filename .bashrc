@@ -7,8 +7,8 @@ DOTFILES_DIR="$(dirname $(readlink $HOME/.bashrc))"
 DOTFILES_OS="$(uname -s)"
 
 # Android SDK
-if [ -d $HOME/Library/Android/sdk ]; then
-	export ANDROID_HOME=$HOME/Library/Android/sdk
+if [ -d /usr/local/share/android-sdk ]; then
+	export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 fi
 
 # Go

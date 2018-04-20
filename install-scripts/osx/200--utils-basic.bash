@@ -11,6 +11,8 @@ brew install \
     jq \
     oniguruma \
     khell/homebrew-srm/srm \
+    android-sdk \
+    android-platform-tools \
 
 npm -g install \
     http-server \
