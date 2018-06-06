@@ -10,6 +10,9 @@ Simple password generator.
 # [git-include-config](git-include-config)
 This command will let you choose a .gitconfig include for the local git repo. It searches your home directory for files that match the pattern `.git-config-*`. This essentially lets you have multiple .gitconfig global files. For example you could have `.git-config-personal` and `.git-config-work` which contains your personal email and work email respectively.
 
+# [git-log-pretty-oneline](git-log-pretty-oneline)
+Print a pretty oneline git log with author
+
 # [git-proon](git-proon)
 Prune your local and remote branches. It checks if the branch has already been merged into master. Use option `-i` for interactive mode.
 
