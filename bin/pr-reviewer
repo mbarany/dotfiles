@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+### Usage
+# pr-reviewer github-team-id [ num_reviewers ] [ excluded_user ... ]
+### Dependencies
+# - curl
+# - awk
+# - jq
+### ENV Vars
+# - GITHUB_TOKEN
+
+team_members() {
+  local -r team_id="${1}"
+  shift
+  local -a -r excluded_members="$@"
+  local all_members=( $(curl -s -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" https://api.github.com/teams/${team_id}/members | jq -r '.[].login') )
+  local filtered_members=${all_members[@]}
+
+  for del in ${excluded_members[@]}
+  do
+     filtered_members=("${filtered_members[@]/$del}")
+  done
+
+  echo "${filtered_members[@]}"
+}
+
+shuffle_array() {
+  echo "$@" | tr ' ' '\n' | awk 'BEGIN { srand() } { print rand() "\t" $0 }' | sort -n | cut -f2-
+}
+
+join_by() {
+  local -r IFS="$1"
+
+  shift
+  echo "$*"
+}
+
+validate_args() {
+  local -r team_id="${1}"
+
+  if [ -z "${team_id}" ]; then
+    echo "Missing github team_id. Run the following command to find your team id"
+    echo -e "\033[1m"
+    echo 'curl -H "Authorization: token $GITHUB_TOKEN" \'
+    echo '  -H "Accept: application/vnd.github.v3+json" \'
+    echo '  https://api.github.com/orgs/{your_org}/teams'
+    printf "\033[0m"
+    exit 1
+  fi
+}
+
+main() {
+  local -r team_id="${1}"
+  validate_args ${team_id}
+
+  local -ir num="${2:-1}"
+  shift; shift
+  local -ar excluded_members="$@"
+  local -ar members=( $(team_members ${team_id} "${excluded_members[@]}") )
+  local -ar randomized_members=($(shuffle_array "${members[@]}"))
+  local -a results=()
+
+  for i in $(seq 1 ${num}); do
+    results+=( "${randomized_members[${i}]}" )
+  done
+
+  echo $(join_by "," ${results[@]})
+}
+
+main "$@"
