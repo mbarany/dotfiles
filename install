@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
+set -o errexit
+set -o nounset
+set -o pipefail
+set -o xtrace
+
 # Current script dir
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DOTFILES_OS="$(uname -s)"
-
-# Dependencies
-#command -v brew >/dev/null 2>&1 || { echo >&2 "Homebrew not found. Please install it from http://brew.sh/"; exit 1; }
-
-set -x
 
 # Idempotent Install
 for f in $DOTFILES_DIR/install-scripts/*; do [[ -f "$f" ]] && source $f; done
@@ -30,3 +30,4 @@ ln -svi $DOTFILES_DIR/.bash_profile $HOME/.bash_profile
 ln -svi $DOTFILES_DIR/.bash_completion $HOME/.bash_completion
 
 unset DOTFILES_DIR
+unset DOTFILES_OS
