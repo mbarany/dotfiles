@@ -1,45 +1,24 @@
 #!/usr/bin/env bash
-# Delete all branches that have been merged to master or specified merge branch && push deletes to remote origin
+# Finds deleted remote branches and deletes the local references as well as any matching local branches
 
-CHECK_ORIGIN=$(git remote -v | grep '^origin.\+(push)$')
-if [ -z "$CHECK_ORIGIN" ]; then
-	echo "You need to be in a git repo with a pushable \"origin\" remote!"
-	exit 1
-fi
+main() {
+  local -r remote="origin"
+  local -ar remote_branches=( $(git remote prune ${remote} | grep "${remote}/" | sed 's/^.*'${remote}'\///g') )
+  local branch
+  local prompt_response
 
-INTERACTIVE='yes'
-MERGE_BRANCH='master'
-while getopts "ib:" OPTION
-do
-	case "$OPTION" in
-		a)
-			INTERACTIVE=''
-			;;
-		b)
-			MERGE_BRANCH="$OPTARG"
-			;;
-	esac
-done
+  for branch in ${remote_branches[@]}; do
+    if [ ! $(git branch --list ${branch}) ]; then
+      continue
+    fi
 
-for BRANCH in $(git branch --merged "$MERGE_BRANCH" | grep -v "\<master\>\|^\*\|\<$MERGE_BRANCH\>"); do
-	if [ -n "$INTERACTIVE" ]; then
-		read -p "$(basename $0): remove branch '$BRANCH'? (y)" RESPONSE
-		if [  "$RESPONSE" != 'y' ] && [ "$RESPONSE" != '' ]; then
-			continue
-		fi
-	fi
-	ST=$(git branch -d "$BRANCH" 2>&1)
-	if [ $? -eq 0 ]; then
-		echo -n "Pruned \"$BRANCH\"; removing from origin..."
-		RST=$(git push origin ":$BRANCH" 2>&1)
-		if [ $? -eq 0 ]; then
-			echo " Removed."
-		else
-			echo
-			echo "Branch \"$BRANCH\" not removed from origin: $RST"
-		fi
-	else
-		ST=$(echo "$ST" | head -n 1 | sed 's/error: //')
-		echo "Branch \"$BRANCH\" not removed: $ST"
-	fi
-done
+    read -p "Remove branch '${branch}'? [Y/n]" prompt_response
+    if [  "${prompt_response}" == 'n' ] || [  "${prompt_response}" == 'N' ]; then
+      continue
+    fi
+
+    git branch -D ${branch}
+  done
+}
+
+main "$@"

@@ -14,7 +14,7 @@ This command will let you choose a .gitconfig include for the local git repo. It
 Print a pretty oneline git log with author
 
 # [git-proon](git-proon)
-Prune your local and remote branches. It checks if the branch has already been merged into master. Use option `-i` for interactive mode.
+Finds deleted remote branches and deletes the local references as well as any matching local branches
 
 # [git-pull-recursive](git-pull-recursive)
 Does a recursive `git pull`.
