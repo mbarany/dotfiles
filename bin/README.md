@@ -4,9 +4,6 @@ Creates the simplest possible Mac app from a shell script. See `appify --help` f
 # [backup-configs](backup-configs)
 Backup script that zips up local files and sends them to the server of your choice via rsync.
 
-# [genpasswd](genpasswd)
-Simple password generator.
-
 # [git-include-config](git-include-config)
 This command will let you choose a .gitconfig include for the local git repo. It searches your home directory for files that match the pattern `.git-config-*`. This essentially lets you have multiple .gitconfig global files. For example you could have `.git-config-personal` and `.git-config-work` which contains your personal email and work email respectively.
 

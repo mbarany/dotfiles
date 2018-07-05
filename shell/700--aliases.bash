@@ -50,6 +50,11 @@ if [ "$DOTFILES_OS" == "Darwin" ]; then
 
   # Lock the screen (when going AFK)
   alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+
+  function genpassword() {
+    local -r length=${1:-22}
+    pwgen --secure --ambiguous --numerals --symbols -1 $length | tee >(pbcopy)
+  }
 fi
 
 # Reload the shell (i.e. invoke as a login shell)
@@ -57,7 +62,7 @@ alias reload="exec $SHELL -l"
 
 # Git
 alias wip="git add -A && git commit --no-verify --no-gpg-sign -m 'WIP'"
-function unwip {
+function unwip() {
     local last_msg=$(git log -1 --pretty=%B)
     if [ "$last_msg" = "WIP" ]; then
         git reset HEAD~1
