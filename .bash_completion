@@ -1,9 +1,10 @@
 DOT_FILES_DIR=$(dirname $(readlink $HOME/.bash_completion))
 
 for f in $DOT_FILES_DIR/bash_completion.d/*; do [[ -f "$f" ]] && source $f; done
-unset f
 
 for f in $HOME/.local/bash_completion.d/*; do [[ -f "$f" ]] && source $f; done
-unset f
 
+for f in $(brew --prefix)/etc/bash_completion.d/*; do [[ -f "$f" ]] && source $f; done
+
+unset f
 unset DOT_FILES_DIR

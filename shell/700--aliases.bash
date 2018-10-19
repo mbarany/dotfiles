@@ -73,6 +73,10 @@ function unwip() {
 if command -v hub > /dev/null; then
   alias git=hub
 fi
+if command -v fork > /dev/null; then
+  alias fork='fork status'
+  alias gitx='fork status'
+fi
 
 # NPM
 alias npm-list-globals="npm -g ls --depth 0"

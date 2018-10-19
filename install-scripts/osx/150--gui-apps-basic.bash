@@ -1,7 +1,7 @@
 brew cask install \
     shiftit \
     hyper \
-    rowanj-gitx \
+    fork \
     jiggler \
     atom \
     docker \
