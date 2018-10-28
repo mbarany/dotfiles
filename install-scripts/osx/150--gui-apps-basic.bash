@@ -5,6 +5,6 @@ brew cask install \
     jiggler \
     atom \
     docker \
-    gpgtools \
+    gpg-suite \
     keybase \
     postman
