@@ -75,7 +75,6 @@ if command -v hub > /dev/null; then
 fi
 if command -v fork > /dev/null; then
   alias fork='fork status'
-  alias gitx='fork status'
 fi
 
 # NPM

@@ -1,11 +1,11 @@
-brew tap homebrew/completions
-brew install \
-    composer-completion \
-    gem-completion \
-    open-completion \
-    vagrant-completion
+brew-install \
+  open-completion \
 
-# Docker Bash Completion
-ln -svi /Applications/Docker.app/Contents/Resources/etc/docker.bash-completion /usr/local/etc/bash_completion.d/docker
-ln -svi /Applications/Docker.app/Contents/Resources/etc/docker-machine.bash-completion /usr/local/etc/bash_completion.d/docker-machine
-ln -svi /Applications/Docker.app/Contents/Resources/etc/docker-compose.bash-completion /usr/local/etc/bash_completion.d/docker-compose
+command -v vagrant > /dev/null && brew-install vagrant-completion
+
+if command -v docker > /dev/null; then
+  # Docker Bash Completion
+  ln -sf /Applications/Docker.app/Contents/Resources/etc/docker.bash-completion /usr/local/etc/bash_completion.d/docker
+  ln -sf /Applications/Docker.app/Contents/Resources/etc/docker-machine.bash-completion /usr/local/etc/bash_completion.d/docker-machine
+  ln -sf /Applications/Docker.app/Contents/Resources/etc/docker-compose.bash-completion /usr/local/etc/bash_completion.d/docker-compose
+fi

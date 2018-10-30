@@ -1,15 +1,12 @@
-function install_php() {
-    brew install \
-        php71 --with-phpdbg \
-        php71-xdebug \
-        php71-mcrypt
+function install-php() {
+  brew install \
+    php71 --with-phpdbg \
+    php71-xdebug \
+    php71-mcrypt \
+    composer
 }
 
-read -r -p "Do you want to install PHP locally? [y/N] " response
-case "$response" in
-    [yY][eE][sS]|[yY])
-        install_php
-        ;;
-    *)
-        ;;
-esac
+[[ "$(no-yes 'Do you want to install PHP/composer locally?')" == "y" ]] && install-php
+
+echo ""
+unset -f install-php

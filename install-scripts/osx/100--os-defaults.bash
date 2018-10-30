@@ -3,7 +3,7 @@ defaults write com.apple.finder AppleShowAllFiles YES
 killall Finder
 
 # Change default screenshot location to ~/Downloads
-defaults write com.apple.screencapture location $HOME/Downloads
+defaults write com.apple.screencapture location ${HOME}/Downloads
 
 # Show battery percentage on top menu bar
 defaults write com.apple.menuextra.battery ShowPercent YES

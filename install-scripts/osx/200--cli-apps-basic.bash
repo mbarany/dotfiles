@@ -1,0 +1,12 @@
+brew-install \
+  git \
+  node \
+  yarn \
+  n \
+  go \
+  bash-completion \
+  hub \
+  awscli \
+  jq \
+  oniguruma \
+  khell/homebrew-srm/srm \
