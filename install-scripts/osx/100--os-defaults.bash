@@ -15,3 +15,6 @@ sudo defaults write /Library/Preferences/com.apple.TimeMachine DoNotOfferNewDisk
 # Don't write DS_Store file on USB and network drive
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
+# Allow cursor to move faster
+defaults write NSGlobalDomain KeyRepeat -int 2
