@@ -3,10 +3,10 @@ brew-cask-install-dialog \
   iterm2 "Iterm 2" on \
   fork "Fork" on \
   jiggler "Jiggler" on \
-  atom "Atom" on \
+  atom "Atom" off \
   docker "Docker" on \
-  gpg-suite "GPG Suite" on \
-  keybase "Keybase" on \
+  gpg-suite "GPG Suite" off \
+  keybase "Keybase" off \
   postman "Postman" on \
   android-sdk "android-sdk" on \
   android-platform-tools "android-platform-tools" on \

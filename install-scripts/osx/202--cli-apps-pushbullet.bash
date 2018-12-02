@@ -9,4 +9,4 @@ install-pushbullet() {
   fi
 }
 
-install-pushbullet
+#install-pushbullet
