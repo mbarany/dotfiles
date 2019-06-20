@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+main () {
+  local -r gihub_repo="${1}"
+  git clone "git@github.com:${gihub_repo}.git"
+}
+
+main "$@"

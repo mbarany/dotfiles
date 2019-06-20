@@ -4,6 +4,9 @@ Creates the simplest possible Mac app from a shell script. See `appify --help` f
 # [backup-configs](backup-configs)
 Backup script that zips up local files and sends them to the server of your choice via rsync.
 
+# [git-clone](git-clone)
+This command wraps `git clone` and adds [bash completion](../bash_completion.d/git-clone) for Github repos. Make sure to add a `GITHUB_TOKEN` to your `.bashrc`.
+
 # [git-include-config](git-include-config)
 This command will let you choose a .gitconfig include for the local git repo. It searches your home directory for files that match the pattern `.git-config-*`. This essentially lets you have multiple .gitconfig global files. For example you could have `.git-config-personal` and `.git-config-work` which contains your personal email and work email respectively.
 
