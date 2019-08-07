@@ -1,5 +1,6 @@
 brew-install \
   git \
+  direnv \
   node \
   yarn \
   n \
