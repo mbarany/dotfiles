@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+#####################################
+# Cleans up an image of a whiteboard
+# Arguments:
+#   source_image
+#   destination_image (Optional)
+#####################################
+main() {
+  local -r source="$1"
+  local -r source_basename="$(basename -- "$source")"
+  local -r auto_destination="${source_basename%.*} (cleaned).${source_basename##*.}"
+  local -r destination="${2:-$auto_destination}"
+
+  convert "${source}" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "${destination}"
+
+  echo "Saved to '${destination}'"
+}
+
+main "$@"

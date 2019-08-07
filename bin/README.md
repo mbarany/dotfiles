@@ -36,3 +36,6 @@ URL decode a string
 
 # [urldecode](urldecode)
 URL encode a string
+
+# [whiteboard-cleaner](whiteboard-cleaner)
+Cleans up an image of a whiteboard
