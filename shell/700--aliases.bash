@@ -89,3 +89,11 @@ aws-sync-bucket () {
 
 # prettify JSON
 alias pj="ruby -e \"require 'json'; puts JSON.pretty_generate(JSON.parse(ARGF.read))\""
+
+heroku() {
+  local args="$@"
+  local -r git_branch="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
+  local -r heroku_app="$(git config heroku.app.${git_branch} 2> /dev/null)"
+
+  HEROKU_APP="${HEROKU_APP:-$heroku_app}" command heroku ${args}
+}
