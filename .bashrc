@@ -11,11 +11,6 @@ if [ -d /usr/local/share/android-sdk ]; then
 	export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 fi
 
-# Go
-if [ -d $HOME/go ]; then
-    export GOPATH=$HOME/go
-fi
-
 # Completion options
 if [ "$DOTFILES_OS" == "Darwin" ]; then
 	if [ -f $(brew --prefix)/etc/bash_completion ]; then

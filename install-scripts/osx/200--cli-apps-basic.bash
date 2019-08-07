@@ -1,13 +1,20 @@
 brew-install \
-  git \
-  direnv \
-  node \
-  yarn \
-  n \
-  go \
-  bash-completion \
-  hub \
   awscli \
+  bash \
+  bash-completion \
+  bat \
+  direnv \
+  gawk \
+  git \
+  hub \
+  imagemagick \
   jq \
-  oniguruma \
   khell/homebrew-srm/srm \
+  n \
+  oniguruma \
+  open-completion \
+  pv \
+  pwgen \
+  tylerbrock/saw/saw \
+  yarn \
+  warrensbox/tap/tfswitch \
