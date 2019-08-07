@@ -86,3 +86,6 @@ aws-sync-bucket () {
   local bucket_name=$1
 	aws s3 sync s3://${bucket_name} ./${bucket_name}
 }
+
+# prettify JSON
+alias pj="ruby -e \"require 'json'; puts JSON.pretty_generate(JSON.parse(ARGF.read))\""
