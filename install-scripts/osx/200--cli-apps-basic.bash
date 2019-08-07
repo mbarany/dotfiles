@@ -15,6 +15,6 @@ brew-install \
   open-completion \
   pv \
   pwgen \
+  tfenv \
   tylerbrock/saw/saw \
   yarn \
-  warrensbox/tap/tfswitch \
