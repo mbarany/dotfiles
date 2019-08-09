@@ -1,15 +1,4 @@
-# Sourced from https://github.com/necolas/dotfiles
-
-# Example:
-# nicolas@host: ~/.dotfiles on master [+!?$]
-# $
-
-# Screenshot: http://i.imgur.com/DSJ1G.png
-# iTerm2 prefs: import Solarized theme (disable bright colors for bold text)
-# Color ref: http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
-# More tips: http://www.cyberciti.biz/tips/howto-linux-unix-bash-shell-setup-prompt.html
-
-prompt_git() {
+__git_prompt() {
     local s=""
     local branchName=""
 
@@ -53,94 +42,71 @@ prompt_git() {
 
         [ -n "$s" ] && s=" [$s]"
 
-        printf "%s" "$1$branchName$s"
+        printf "%s" "$branchName$s"
     else
         return
     fi
 }
 
-set_prompts() {
-    local black=""
-    local blue=""
-    local bold=""
-    local cyan=""
-    local green=""
-    local orange=""
-    local purple=""
-    local red=""
-    local reset=""
-    local white=""
-    local yellow=""
+__ruby_version() {
+  local -r ruby_version="$(command -v rbenv > /dev/null && rbenv local 2> /dev/null)"
 
-    local hostStyle=""
-    local userStyle=""
-
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-        tput sgr0 # reset colors
-
-        bold=$(tput bold)
-        reset=$(tput sgr0)
-
-        # Solarized colors
-        # (https://github.com/altercation/solarized/tree/master/iterm2-colors-solarized#the-values)
-        black=$(tput setaf 0)
-        blue=$(tput setaf 33)
-        cyan=$(tput setaf 37)
-        green=$(tput setaf 64)
-        orange=$(tput setaf 166)
-        purple=$(tput setaf 125)
-        red=$(tput setaf 124)
-        white=$(tput setaf 15)
-        yellow=$(tput setaf 136)
-    else
-        bold=""
-        reset="\e[0m"
-
-        black="\e[1;30m"
-        blue="\e[1;34m"
-        cyan="\e[1;36m"
-        green="\e[1;32m"
-        orange="\e[1;33m"
-        purple="\e[1;35m"
-        red="\e[1;31m"
-        white="\e[1;37m"
-        yellow="\e[1;33m"
-    fi
-
-    # build the prompt
-
-    # logged in as root
-    if [[ "$USER" == "root" ]]; then
-        userStyle="$bold$red"
-    else
-        userStyle="$orange"
-    fi
-
-    # connected via ssh
-    if [[ "$SSH_TTY" ]]; then
-        hostStyle="$bold$red"
-    else
-        hostStyle="$yellow"
-    fi
-
-    # set the terminal title to the current working directory
-    PS1="\[\033]0;\w\007\]"
-
-    PS1+="\n" # newline
-    PS1+="\[$userStyle\]\u" # username
-    PS1+="\[$reset$white\]@"
-    PS1+="\[$hostStyle\]\h" # host
-    PS1+="\[$reset$white\]: "
-    PS1+="\[$green\]\w" # working directory
-    PS1+="\$(prompt_git \"$white on $cyan\")" # git repository details
-    PS1+="\n"
-    PS1+="\[$reset$white\]\$ \[$reset\]" # $ (and reset color)
+  if [[ ! -z "$ruby_version" ]]; then
+    echo " [Ruby: $ruby_version]"
+  fi
 }
 
-set_prompts
+__bash_prompt() {
+  local ps1=""
+  local host_style=""
+  local user_style=""
+  local -r git_prompt="$(__git_prompt)"
+
+  source $(dirname $(readlink $HOME/.bashrc))/lib/colors.bash
+
+  # logged in as root
+  if [[ "${USER}" == "root" ]]; then
+      user_style="${__COLORS_BOLD}${__COLORS_RED}"
+  else
+      user_style="${__COLORS_ORANGE}"
+  fi
+
+  # connected via ssh
+  if [[ "$SSH_TTY" ]]; then
+      host_style="${__COLORS_BOLD}${__COLORS_RED}"
+  else
+      host_style="${__COLORS_YELLOW}"
+  fi
+
+  # username
+  ps1+="${user_style}${USER}"
+
+  ps1+="${__COLORS_CLEAR}${__COLORS_WHITE}@"
+
+  # host
+  ps1+="${host_style}$(hostname)"
+
+  ps1+="${__COLORS_CLEAR}${__COLORS_WHITE}: "
+
+  # working directory
+  ps1+="${__COLORS_GREEN}$(dirs +0)"
+
+  # ruby version
+  ps1+="${__COLORS_RED}$(__ruby_version)"
+
+  # git
+  if [[ ! -z "${git_prompt}" ]]; then
+    ps1+="${__COLORS_WHITE} on ${__COLORS_CYAN}${git_prompt}"
+  fi
+
+  ps1+="\n"
+  ps1+="${__COLORS_CLEAR}${__COLORS_WHITE}\$${__COLORS_CLEAR} "
+
+  echo -ne "${ps1}"
+}
+
+PS1="\$(__bash_prompt)"
 
 # Make new shells get the history lines from all previous
 # shells instead of the default "last window closed" history
 PROMPT_COMMAND='history -a;'
-
-unset set_prompts

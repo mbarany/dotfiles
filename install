@@ -31,4 +31,4 @@ source ${DOTFILES_DIR}/install-symlinks.bash
 unset DOTFILES_DIR
 unset DOTFILES_OS
 
-echo -e "${COLORS__GREEN}All Done!${COLORS__CLEAR}"
+echo -e "${__COLORS_GREEN}All Done!${__COLORS_RESET}"
