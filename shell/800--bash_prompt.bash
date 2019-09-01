@@ -1,6 +1,6 @@
 __git_prompt() {
     local s=""
-    local branchName=""
+    local branch_name=""
 
     # check if the current directory is in a git repository
     if [ $(git rev-parse --is-inside-work-tree &>/dev/null; printf "%s" $?) == 0 ]; then
@@ -13,22 +13,22 @@ __git_prompt() {
 
             # check for uncommitted changes in the index
             if ! $(git diff --quiet --ignore-submodules --cached); then
-                s="$s+";
+                s="${s}+";
             fi
 
             # check for unstaged changes
             if ! $(git diff-files --quiet --ignore-submodules --); then
-                s="$s!";
+                s="${s}!";
             fi
 
             # check for untracked files
             if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-                s="$s?";
+                s="${s}?";
             fi
 
             # check for stashed files
             if $(git rev-parse --verify refs/stash &>/dev/null); then
-                s="$s$";
+                s="${s}$";
             fi
 
         fi
@@ -36,77 +36,108 @@ __git_prompt() {
         # get the short symbolic ref
         # if HEAD isn't a symbolic ref, get the short SHA
         # otherwise, just give up
-        branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
+        branch_name="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
                       git rev-parse --short HEAD 2> /dev/null || \
                       printf "(unknown)")"
 
         [ -n "$s" ] && s=" [$s]"
 
-        printf "%s" "$branchName$s"
+        printf "%s" "${branch_name}${s}"
     else
         return
     fi
 }
 
 __ruby_version() {
-  local -r ruby_version="$(command -v rbenv > /dev/null && rbenv local 2> /dev/null)"
+  command -v rbenv > /dev/null && rbenv local 2> /dev/null
+}
 
-  if [[ ! -z "$ruby_version" ]]; then
-    echo " [Ruby: $ruby_version]"
+__battery_status() {
+  local -r battery_status="$(command -v pmset > /dev/null && pmset -g batt | grep -Eo "\d+%" | cut -d% -f1 2> /dev/null)"
+  local battery_status_bar=''
+
+  if [[ ! -z "${battery_status}" ]]; then
+    if [[ "${battery_status}" -le "5" ]]; then
+      battery_status_bar="${__COLORS_BG_BRIGHT_RED}${__COLORS_WHITE} ${__NF_BATTERY_EMPTY}"
+    elif [[ "${battery_status}" -le "25" ]]; then
+      battery_status_bar="${__COLORS_BG_ORANGE}${__COLORS_WHITE} ${__NF_BATTERY_QUARTER}"
+    elif [[ "${battery_status}" -le "50" ]]; then
+      battery_status_bar="${__COLORS_BG_BRIGHT_YELLOW}${__COLORS_BLACK} ${__NF_BATTERY_HALF}"
+    elif [[ "${battery_status}" -le "75" ]]; then
+      battery_status_bar="${__COLORS_BG_GREEN}${__COLORS_BLACK} ${__NF_BATTERY_THREE_QUARTERS}"
+    fi
+
+    if [[ ! -z "${battery_status_bar}" ]]; then
+      echo -ne "${battery_status_bar}  ${battery_status}% ${__COLORS_CLEAR}"
+    fi
   fi
 }
 
+__timer_last="0"
+__timer_start() {
+  __timer=${__timer:-${SECONDS}}
+}
+__timer_stop() {
+  __timer_last=$((${SECONDS} - ${__timer}))
+  unset __timer
+}
+trap '__timer_start' DEBUG
+
 __bash_prompt() {
+  if [[ "${USER}" == "root" ]]; then
+    echo "\001$(tput setaf 124)\002   \001$(tput sgr0)\002 "
+    return 0
+  fi
+
   local ps1=""
-  local host_style=""
-  local user_style=""
   local -r git_prompt="$(__git_prompt)"
+  local -r ruby_version="$(__ruby_version)"
 
   source $(dirname $(readlink $HOME/.bashrc))/lib/colors.bash
+  source $(dirname $(readlink $HOME/.bashrc))/lib/nerd_font_icons.bash
 
-  # logged in as root
-  if [[ "${USER}" == "root" ]]; then
-      user_style="${__COLORS_BOLD}${__COLORS_RED}"
-  else
-      user_style="${__COLORS_ORANGE}"
-  fi
+  ps1+="$(__battery_status)"
 
-  # connected via ssh
-  if [[ "$SSH_TTY" ]]; then
-      host_style="${__COLORS_BOLD}${__COLORS_RED}"
-  else
-      host_style="${__COLORS_YELLOW}"
-  fi
-
-  # username
-  ps1+="${user_style}${USER}"
-
-  ps1+="${__COLORS_CLEAR}${__COLORS_WHITE}@"
-
-  # host
-  ps1+="${host_style}$(hostname)"
-
-  ps1+="${__COLORS_CLEAR}${__COLORS_WHITE}: "
+  # username & host
+  ps1+="${__COLORS_BG_PURPLE}${__COLORS_WHITE} ${__NF_USER} \u${__NF_DIVIDER}${__NF_COMPUTER} \h ${__COLORS_CLEAR}"
 
   # working directory
-  ps1+="${__COLORS_GREEN}$(dirs +0)"
+  ps1+="${__COLORS_BG_BLUE}${__COLORS_BLACK} ${__NF_FOLDER} \w ${__COLORS_CLEAR}"
 
   # ruby version
-  ps1+="${__COLORS_RED}$(__ruby_version)"
+  if [[ ! -z "${ruby_version}" ]]; then
+    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_RUBY} ${ruby_version} ${__COLORS_CLEAR}"
+  fi
 
   # git
   if [[ ! -z "${git_prompt}" ]]; then
-    ps1+="${__COLORS_WHITE} on ${__COLORS_CYAN}${git_prompt}"
+    ps1+="${__COLORS_BG_GREEN}${__COLORS_BLACK} ${__NF_GIT_BRANCH} ${git_prompt} ${__COLORS_CLEAR}"
+  fi
+
+  # number of background jobs
+  if [[ -n "$(jobs -p)" ]]; then
+    ps1+="${__COLORS_BG_BRIGHT_YELLOW}${__COLORS_BLACK} ${__NF_BICYCLE} \j ${__COLORS_CLEAR}"
+  fi
+
+  # execution time of last command
+  if [[ "${__timer_last}" -gt "3" ]]; then
+    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_CLOCK_ALERT}${__timer_last}s ${__COLORS_CLEAR}"
+  fi
+
+  # shell exit code of last command
+  if [[ "${__exit_code}" -ne "0" ]]; then
+    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_BUG} ${__exit_code} ${__COLORS_CLEAR}"
   fi
 
   ps1+="\n"
-  ps1+="${__COLORS_CLEAR}${__COLORS_WHITE}\$${__COLORS_CLEAR} "
+
+  ps1+="${__COLORS_WHITE}${__NF_TERMINAL}${__COLORS_CLEAR}  "
 
   echo -ne "${ps1}"
 }
 
-PS1="\$(__bash_prompt)"
+PS1="\$(__exit_code=\$?; $(declare -f __bash_prompt); __bash_prompt)"
 
 # Make new shells get the history lines from all previous
 # shells instead of the default "last window closed" history
-PROMPT_COMMAND='history -a;'
+PROMPT_COMMAND='history -a; __timer_stop; '

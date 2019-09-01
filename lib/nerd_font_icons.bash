@@ -1,0 +1,16 @@
+declare -r __NF_BATTERY_EMPTY=''
+declare -r __NF_BATTERY_QUARTER=''
+declare -r __NF_BATTERY_HALF=''
+declare -r __NF_BATTERY_THREE_QUARTERS=''
+
+declare -r __NF_USER=''
+declare -r __NF_COMPUTER=''
+declare -r __NF_FOLDER=''
+declare -r __NF_DIVIDER=''
+declare -r __NF_TERMINAL=''
+declare -r __NF_BUG=''
+declare -r __NF_BICYCLE=' '
+declare -r __NF_CLOCK_ALERT='鬒'
+
+declare -r __NF_RUBY=''
+declare -r __NF_GIT_BRANCH='שׂ'
