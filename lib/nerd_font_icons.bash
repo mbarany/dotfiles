@@ -11,6 +11,7 @@ declare -r __NF_TERMINAL=''
 declare -r __NF_BUG=''
 declare -r __NF_BICYCLE=' '
 declare -r __NF_CLOCK_ALERT='鬒'
+declare -r __NF_TERMINAL_2=''
 
 declare -r __NF_RUBY=''
 declare -r __NF_GIT_BRANCH='שׂ'

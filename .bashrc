@@ -29,3 +29,5 @@ unset DOTFILES_DIR
 
 # exit with a success status code
 return 0
+
+[[ -f ${HOME}/Library/Preferences/org.dystroy.broot/launcher/bash/br ]] && source ${HOME}/Library/Preferences/org.dystroy.broot/launcher/bash/br

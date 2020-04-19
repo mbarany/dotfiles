@@ -56,7 +56,7 @@ __battery_status() {
   local -r battery_status="$(command -v pmset > /dev/null && pmset -g batt | grep -Eo "\d+%" | cut -d% -f1 2> /dev/null)"
   local battery_status_bar=''
 
-  if [[ ! -z "${battery_status}" ]]; then
+  if [[ -n "${battery_status}" ]]; then
     if [[ "${battery_status}" -le "5" ]]; then
       battery_status_bar="${__COLORS_BG_BRIGHT_RED}${__COLORS_WHITE} ${__NF_BATTERY_EMPTY}"
     elif [[ "${battery_status}" -le "25" ]]; then
@@ -67,7 +67,7 @@ __battery_status() {
       battery_status_bar="${__COLORS_BG_GREEN}${__COLORS_BLACK} ${__NF_BATTERY_THREE_QUARTERS}"
     fi
 
-    if [[ ! -z "${battery_status_bar}" ]]; then
+    if [[ -n "${battery_status_bar}" ]]; then
       echo -ne "${battery_status_bar}  ${battery_status}% ${__COLORS_CLEAR}"
     fi
   fi
@@ -89,6 +89,11 @@ __bash_prompt() {
     return 0
   fi
 
+  if [[ -z "$(command -v __git_prompt)" ]]; then
+    echo '\u@\h - \w\n$ '
+    return 0
+  fi
+
   local ps1=""
   local -r git_prompt="$(__git_prompt)"
   local -r ruby_version="$(__ruby_version)"
@@ -105,13 +110,18 @@ __bash_prompt() {
   ps1+="${__COLORS_BG_BLUE}${__COLORS_BLACK} ${__NF_FOLDER} \w ${__COLORS_CLEAR}"
 
   # ruby version
-  if [[ ! -z "${ruby_version}" ]]; then
+  if [[ -n "${ruby_version}" ]]; then
     ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_RUBY} ${ruby_version} ${__COLORS_CLEAR}"
   fi
 
   # git
-  if [[ ! -z "${git_prompt}" ]]; then
+  if [[ -n "${git_prompt}" ]]; then
     ps1+="${__COLORS_BG_GREEN}${__COLORS_BLACK} ${__NF_GIT_BRANCH} ${git_prompt} ${__COLORS_CLEAR}"
+  fi
+
+  # shell level
+  if [[ "${SHLVL}" -gt '1' ]]; then
+    ps1+="${__COLORS_BG_ORANGE}${__COLORS_WHITE} ${__NF_TERMINAL_2} ${SHLVL} ${__COLORS_CLEAR}"
   fi
 
   # number of background jobs
@@ -120,12 +130,12 @@ __bash_prompt() {
   fi
 
   # execution time of last command
-  if [[ "${__timer_last}" -gt "3" ]]; then
+  if [[ "${__timer_last}" -gt '3' ]]; then
     ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_CLOCK_ALERT}${__timer_last}s ${__COLORS_CLEAR}"
   fi
 
   # shell exit code of last command
-  if [[ "${__exit_code}" -ne "0" ]]; then
+  if [[ "${__exit_code}" -ne '0' ]]; then
     ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_BUG} ${__exit_code} ${__COLORS_CLEAR}"
   fi
 
@@ -140,4 +150,4 @@ PS1="\$(__exit_code=\$?; $(declare -f __bash_prompt); __bash_prompt)"
 
 # Make new shells get the history lines from all previous
 # shells instead of the default "last window closed" history
-PROMPT_COMMAND='history -a; __timer_stop; '
+PROMPT_COMMAND='history -a; command -v __timer_stop > /dev/null && __timer_stop || true'

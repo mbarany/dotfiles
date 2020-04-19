@@ -1,7 +1,7 @@
 # bash completion for git-clone
 
 _git-clone_cache_file() {
-  echo "/tmp/cache_github_repo_names"
+  echo "${HOME}/.cache_github_repo_names"
 }
 
 _git-clone_curl_github() {
@@ -70,7 +70,7 @@ _git-clone_completions() {
 
   # Refresh cache
   local -r should_recache="$(find ${cache_file} -mmin +5)"
-  if [[ ! -z "${should_recache}" ]]; then
+  if [[ -n "${should_recache}" ]]; then
     (_git-clone_cache_all_repos 2> /dev/null &)
   fi
 
