@@ -34,7 +34,7 @@ brew-install() {
     if [ -z "${package_version}" ]; then
       brew install ${package}
     else
-      echo -e "Homebrew package ${__COLORS_BLUE}${package}${__COLORS_RESET} already installed"
+      echo -e "Homebrew package ${__COLORS_BLUE}${package}${__COLORS_CLEAR} already installed"
     fi
   done
 }
@@ -49,7 +49,7 @@ npm-install() {
     if [ "$?" -ne "0" ]; then
       npm -g install ${package}
     else
-      echo -e "NPM package ${__COLORS_BLUE}${package}${__COLORS_RESET} already installed"
+      echo -e "NPM package ${__COLORS_BLUE}${package}${__COLORS_CLEAR} already installed"
     fi
   done
 }
@@ -72,7 +72,7 @@ brew-cask-install-dialog() {
     if [ -z "${package_version}" ]; then
       brew cask install ${package}
     else
-      echo -e "Homebrew cask package ${__COLORS_BLUE}${package}${__COLORS_RESET} already installed"
+      echo -e "Homebrew cask package ${__COLORS_BLUE}${package}${__COLORS_CLEAR} already installed"
     fi
   done
 }
