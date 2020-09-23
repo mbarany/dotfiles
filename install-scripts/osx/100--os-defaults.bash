@@ -9,8 +9,8 @@ defaults write com.apple.screencapture location ${HOME}/Downloads
 defaults write com.apple.menuextra.battery ShowPercent YES
 killall SystemUIServer
 
-# Disble time machine when new media inserted to the system
-sudo defaults write /Library/Preferences/com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+# Disable time machine when new media inserted to the system
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 # Don't write DS_Store file on USB and network drive
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
