@@ -99,9 +99,10 @@ __bash_prompt() {
   local ps1=""
   local -r git_prompt="$(__git_prompt)"
   local -r ruby_version="$(__ruby_version)"
+  local -r aws_tokens="$(cat /tmp/ps1_aws_tokens 2> /dev/null)"
 
-  source $(dirname $(readlink $HOME/.bashrc))/lib/colors.bash
-  source $(dirname $(readlink $HOME/.bashrc))/lib/nerd_font_icons.bash
+  source ${DOTFILES_DIR}/lib/colors.bash
+  source ${DOTFILES_DIR}/lib/nerd_font_icons.bash
 
   ps1+="$(__battery_status)"
 
@@ -114,6 +115,11 @@ __bash_prompt() {
   # ruby version
   if [[ -n "${ruby_version}" ]]; then
     ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_RUBY} ${ruby_version} ${__COLORS_CLEAR}"
+  fi
+
+  # aws tokens
+  if [[ -n "${aws_tokens}" ]]; then
+    ps1+="${__COLORS_BG_BRIGHT_YELLOW}${__COLORS_BLACK} ${__NF_AWS} ${aws_tokens} ${__COLORS_CLEAR}"
   fi
 
   # git

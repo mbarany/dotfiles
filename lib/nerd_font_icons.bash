@@ -15,3 +15,4 @@ declare -r __NF_TERMINAL_2=''
 
 declare -r __NF_RUBY=''
 declare -r __NF_GIT_BRANCH='שׂ'
+declare -r __NF_AWS=''

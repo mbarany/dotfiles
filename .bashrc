@@ -1,5 +1,8 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
+# Uncomment to debug script
+# set -o xtrace
+
 # If not running interactively, don't do anything
 [ -z "${PS1}" ] && return
 
@@ -24,8 +27,6 @@ unset f
 
 # load a local specific sources last
 [[ -f ${HOME}/.local/bashrc ]] && source ${HOME}/.local/bashrc
-
-unset DOTFILES_DIR
 
 # exit with a success status code
 return 0
