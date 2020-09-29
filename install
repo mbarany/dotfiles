@@ -13,6 +13,9 @@ DOTFILES_OS="$(uname -s)"
 
 source ${DOTFILES_DIR}/lib/colors.bash
 
+# Add Symlinks
+source ${DOTFILES_DIR}/install-symlinks.bash
+
 # Idempotent Install
 for f in ${DOTFILES_DIR}/install-scripts/*; do [[ -f "${f}" ]] && source ${f}; done
 if [ "${DOTFILES_OS}" == "Darwin" ]; then
@@ -24,9 +27,6 @@ unset f
 
 # Local
 [[ -f "${HOME}/.local/install" ]] && source ${HOME}/.local/install
-
-# Add Symlinks
-source ${DOTFILES_DIR}/install-symlinks.bash
 
 unset DOTFILES_DIR
 unset DOTFILES_OS

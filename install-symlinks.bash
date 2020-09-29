@@ -13,5 +13,6 @@ symlink ${DOTFILES_DIR}/.inputrc ${HOME}/.inputrc
 symlink ${DOTFILES_DIR}/.bashrc ${HOME}/.bashrc
 symlink ${DOTFILES_DIR}/.bash_profile ${HOME}/.bash_profile
 symlink ${DOTFILES_DIR}/.bash_completion ${HOME}/.bash_completion
+symlink ${DOTFILES_DIR}/.crontab ${HOME}/.crontab
 
 unset -f symlink

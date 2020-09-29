@@ -1,5 +1,5 @@
 __git_prompt() {
-    local s=""
+    local status=""
     local branch_name=""
 
     # check if the current directory is in a git repository
@@ -13,22 +13,22 @@ __git_prompt() {
 
             # check for uncommitted changes in the index
             if ! $(git diff --quiet --ignore-submodules --cached); then
-                s="${s}+";
+                status="${status}+";
             fi
 
             # check for unstaged changes
             if ! $(git diff-files --quiet --ignore-submodules --); then
-                s="${s}!";
+                status="${status}!";
             fi
 
             # check for untracked files
             if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-                s="${s}?";
+                status="${status}?";
             fi
 
             # check for stashed files
             if $(git rev-parse --verify refs/stash &>/dev/null); then
-                s="${s}$";
+                status="${status}$";
             fi
 
         fi
@@ -40,9 +40,9 @@ __git_prompt() {
                       git rev-parse --short HEAD 2> /dev/null || \
                       printf "(unknown)")"
 
-        [ -n "$s" ] && s=" [$s]"
+        [ -n "$status" ] && status=" [$status]"
 
-        printf "%s" "${branch_name}${s}"
+        printf "%s" "${branch_name}${status}"
     else
         return
     fi
@@ -53,7 +53,9 @@ __ruby_version() {
 }
 
 __battery_status() {
-  local -r battery_status="$(command -v pmset > /dev/null && pmset -g batt | grep -Eo "\d+%" | cut -d% -f1 2> /dev/null)"
+  [[ ! -f "/tmp/ps1_battery_status" ]] && return
+
+  local -r battery_status="$(cat /tmp/ps1_battery_status)"
   local battery_status_bar=''
 
   if [[ -n "${battery_status}" ]]; then

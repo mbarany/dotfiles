@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+main() {
+  local -r battery_status="$(command -v pmset > /dev/null && pmset -g batt | grep -Eo "\d+%" | cut -d% -f1 2> /dev/null)"
+
+  echo ${battery_status} > /tmp/ps1_battery_status
+}
+
+main "$@"
