@@ -1,4 +1,5 @@
 /.idea
 .DS_Store
 /__local__/
+.generators
 

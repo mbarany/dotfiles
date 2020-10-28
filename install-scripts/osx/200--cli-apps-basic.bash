@@ -17,4 +17,4 @@ brew-install \
   pwgen \
   tfenv \
   tylerbrock/saw/saw \
-  yarn \
+  yarn

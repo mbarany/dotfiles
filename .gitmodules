@@ -1,6 +1,3 @@
-[submodule "submodules/keybase-completion"]
-	path = submodules/keybase-completion
-	url = https://github.com/dtiersch/keybase-completion.git
 [submodule "submodules/yarn-completion"]
 	path = submodules/yarn-completion
 	url = https://github.com/dsifford/yarn-completion.git

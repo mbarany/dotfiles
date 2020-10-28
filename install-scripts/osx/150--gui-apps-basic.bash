@@ -6,7 +6,6 @@ brew-cask-install-dialog \
   atom "Atom" on \
   docker "Docker" on \
   gpg-suite "GPG Suite" on \
-  keybase "Keybase" on \
   postman "Postman" on \
   android-sdk "android-sdk" on \
   android-platform-tools "android-platform-tools" on \
