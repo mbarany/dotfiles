@@ -90,6 +90,8 @@ aws-sync-bucket () {
 # prettify JSON
 alias pj="ruby -e \"require 'json'; puts JSON.pretty_generate(JSON.parse(ARGF.read))\""
 
+alias pritunl-client="/Applications/Pritunl.app/Contents/Resources/pritunl-client"
+
 heroku() {
   local args="$@"
   local -r git_branch="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
