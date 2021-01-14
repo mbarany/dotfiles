@@ -26,6 +26,8 @@
     br = branch
     co = checkout
     brn = !"git symbolic-ref --short -q HEAD"
+    what = for-each-ref --sort='authordate:iso8601' --format=' %(color:green)%(authordate:relative)%09%(color:white)%(refname:short)' refs/heads
+    wat = what
 
     ### Stashing
     sp = stash pop
