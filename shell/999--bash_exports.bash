@@ -9,11 +9,11 @@ export HISTCONTROL="ignorespace:ignoredups"
 
 # Increase the maximum number of lines contained in the history file
 # (default is 500)
-export HISTFILESIZE=10000
+export HISTFILESIZE=50000
 
 # Increase the maximum number of commands to remember
 # (default is 500)
-export HISTSIZE=10000
+export HISTSIZE=50000
 
 # Don't clear the screen after quitting a manual page
 export MANPAGER="less -X"
