@@ -92,10 +92,10 @@ alias pj="ruby -e \"require 'json'; puts JSON.pretty_generate(JSON.parse(ARGF.re
 
 alias pritunl-client="/Applications/Pritunl.app/Contents/Resources/pritunl-client"
 
-heroku() {
-  local args="$@"
-  local -r git_branch="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
-  local -r heroku_app="$(git config heroku.app.${git_branch} 2> /dev/null)"
+alias bin2json="base64 -d | jq"
 
-  HEROKU_APP="${HEROKU_APP:-$heroku_app}" command heroku ${args}
-}
+alias typeless='history 20000 | sed "s/.*  //"  | sort | uniq -c | sort -g | tail -n 100'
+
+alias a='atom .'
+
+alias diff='diff --side-by-side --suppress-common-lines'
