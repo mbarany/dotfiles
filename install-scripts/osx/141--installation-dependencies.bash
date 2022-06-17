@@ -67,10 +67,10 @@ brew-cask-install-dialog() {
   local -r choices=$(echo ${args} | xargs dialog --keep-tite --stdout --checklist 'Choose items to install:' 0 0 0)
 
   for package in ${choices}; do
-    package_version="$(brew cask ls --versions ${package} || true)"
+    package_version="$(brew ls --cask --versions ${package} || true)"
 
     if [ -z "${package_version}" ]; then
-      brew cask install ${package}
+      brew install --cask ${package}
     else
       echo -e "Homebrew cask package ${__COLORS_BLUE}${package}${__COLORS_CLEAR} already installed"
     fi

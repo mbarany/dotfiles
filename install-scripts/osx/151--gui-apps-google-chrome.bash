@@ -5,7 +5,7 @@ install-google-chrome() {
     read -r -p "Google Chrome not detected. Install it? [y/N] " response
     case "$response" in
       [yY][eE][sS]|[yY])
-        brew cask install google-chrome
+        brew install --cask google-chrome
         ;;
       *)
         ;;
