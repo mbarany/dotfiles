@@ -6,8 +6,7 @@ killall Finder
 defaults write com.apple.screencapture location ${HOME}/Downloads
 
 # Show battery percentage on top menu bar
-defaults write com.apple.menuextra.battery ShowPercent YES
-killall SystemUIServer
+defaults write ~/Library/Preferences/ByHost/com.apple.controlcenter.plist BatteryShowPercentage -bool true
 
 # Disable time machine when new media inserted to the system
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
