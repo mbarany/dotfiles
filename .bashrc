@@ -13,6 +13,8 @@ fi
 
 # Completion options
 if [ "${DOTFILES_OS}" == "Darwin" ]; then
+	[[ -d /opt/homebrew/bin && -z "$(echo "${PATH}" | grep '/opt/homebrew/bin')" ]] && PATH="/opt/homebrew/bin:${PATH}"
+
 	if [ -f $(brew --prefix)/etc/bash_completion ]; then
 		source $(brew --prefix)/etc/bash_completion
 	fi

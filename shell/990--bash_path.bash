@@ -1,5 +1,3 @@
-[[ -d /usr/local/bin && -z "$(echo "${PATH}" | grep '/usr/local/bin')" ]] && PATH="/usr/local/bin:${PATH}"
-
 [[ -d ${HOME}/.rvm/bin ]] && PATH="${HOME}/.rvm/bin:${PATH}"
 
 [[ "$GOPATH" != "" && -d ${GOPATH}/bin ]] && PATH="${GOPATH}/bin:${PATH}"
