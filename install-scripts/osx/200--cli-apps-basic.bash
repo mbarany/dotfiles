@@ -9,12 +9,14 @@ brew-install \
   hub \
   imagemagick \
   jq \
-  khell/homebrew-srm/srm \
+  khell/srm/srm \
   n \
   oniguruma \
   open-completion \
   pv \
   pwgen \
   tfenv \
+  terraform-docs \
   tylerbrock/saw/saw \
+  npm \
   yarn
