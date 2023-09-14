@@ -37,6 +37,8 @@
     tags = tag -l
     branches = branch -a
     remotes = remote -v
+    default-branch = !"git remote show origin | sed -n '/HEAD branch/s/.*: //p'"
+    db = default-branch
 
     ### Committing
     # Amends last commit using the same commit message

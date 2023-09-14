@@ -1,1 +1,0 @@
-../submodules/keybase-completion/keybase
