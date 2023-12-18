@@ -16,4 +16,8 @@ if [ ! -f $HOME/.gitconfig ]; then
 
   unset FULL_NAME
   unset RESPONSE
+  
+  read -p "Email: " RESPONSE
+  git config --global user.email "$RESPONSE"
+  unset RESPONSE
 fi
