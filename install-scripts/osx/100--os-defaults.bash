@@ -14,3 +14,7 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Don't write DS_Store file on USB and network drive
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
+# Menubar spacing for showing more icons
+defaults -currentHost write -globalDomain NSStatusItemSpacing 6
+defaults -currentHost write -globalDomain NSStatusItemSelectionPadding 6
