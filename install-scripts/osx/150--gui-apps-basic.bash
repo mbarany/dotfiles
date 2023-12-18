@@ -4,7 +4,6 @@ brew-cask-install-dialog \
   iterm2 "Iterm 2" on \
   fork "Fork" on \
   jiggler "Jiggler" on \
-  atom "Atom" on \
   sublime-text "Sublime Text" on \
   typora "Typora" on \
   viscosity "Viscosity" on \

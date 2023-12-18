@@ -96,6 +96,6 @@ alias bin2json="base64 -d | jq"
 
 alias typeless='history 20000 | sed "s/.*  //"  | sort | uniq -c | sort -g | tail -n 100'
 
-alias a='atom .'
+alias e='subl .'
 
 alias diff='diff --side-by-side --suppress-common-lines'
