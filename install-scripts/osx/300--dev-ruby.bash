@@ -3,7 +3,8 @@ function install-ruby() {
     rbenv \
     ruby-build \
     gem-completion \
-    bundler-completion
+    bundler-completion \
+    libpq
 }
 
 [[ "$(yes-no 'Do you want to install Ruby locally?')" == "y" ]] && install-ruby
