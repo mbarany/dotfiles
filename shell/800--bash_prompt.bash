@@ -52,6 +52,10 @@ __ruby_version() {
   command -v rbenv > /dev/null && rbenv local 2> /dev/null
 }
 
+__kubectl_context() {
+  command -v kubectl > /dev/null && kubectl config current-context
+}
+
 __battery_status() {
   [[ ! -f "/tmp/ps1_battery_status" ]] && return
 
@@ -99,6 +103,7 @@ __bash_prompt() {
   local ps1=""
   local -r git_prompt="$(__git_prompt)"
   local -r ruby_version="$(__ruby_version)"
+  local -r kubectl_context="$(__kubectl_context)"
 
   source $(dirname $(readlink $HOME/.bashrc))/lib/colors.bash
   source $(dirname $(readlink $HOME/.bashrc))/lib/nerd_font_icons.bash
@@ -110,6 +115,11 @@ __bash_prompt() {
 
   # working directory
   ps1+="${__COLORS_BG_BLUE}${__COLORS_BLACK} ${__NF_FOLDER} \w ${__COLORS_CLEAR}"
+
+  # kubectl context
+  if [[ -n "${kubectl_context}" ]]; then
+    ps1+="${__COLORS_BG_ORANGE}${__COLORS_WHITE} ${__NF_K8S} ${kubectl_context} ${__COLORS_CLEAR}"
+  fi
 
   # ruby version
   if [[ -n "${ruby_version}" ]]; then
@@ -133,7 +143,7 @@ __bash_prompt() {
 
   # execution time of last command
   if [[ "${__timer_last}" -gt '3' ]]; then
-    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_CLOCK_ALERT}${__timer_last}s ${__COLORS_CLEAR}"
+    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_TIMER_SAND}${__timer_last}s ${__COLORS_CLEAR}"
   fi
 
   # shell exit code of last command
