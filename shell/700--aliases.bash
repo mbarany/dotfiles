@@ -99,3 +99,13 @@ alias typeless='history 20000 | sed "s/.*  //"  | sort | uniq -c | sort -g | tai
 alias e='subl .'
 
 alias diff='diff --side-by-side --suppress-common-lines'
+
+helm-login-ghcr () {
+  local -r username=$(gh auth status | sed -nE 's/.*account ([^ ]+).*/\1/p')
+
+  echo "Logging in to help as '$username'"
+
+  echo "$GITHUB_TOKEN" | helm registry login ghcr.io \
+    --username $username \
+    --password-stdin
+}
