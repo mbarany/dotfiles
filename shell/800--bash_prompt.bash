@@ -53,7 +53,7 @@ __ruby_version() {
 }
 
 __kubectl_context() {
-  command -v kubectl > /dev/null && kubectl config current-context &> /dev/null && kubectl config current-context
+  command -v kubectl > /dev/null && kubectl config current-context --request-timeout=1s &> /dev/null && kubectl config current-context --request-timeout=1s 2> /dev/null
 }
 
 __battery_status() {
