@@ -10,6 +10,7 @@ brew-install \
   imagemagick \
   jq \
   khell/srm/srm \
+  mike-engel/jwt-cli/jwt-cli \
   n \
   oniguruma \
   open-completion \
