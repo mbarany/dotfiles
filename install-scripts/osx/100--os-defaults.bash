@@ -18,3 +18,11 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 # Menubar spacing for showing more icons
 defaults -currentHost write -globalDomain NSStatusItemSpacing 6
 defaults -currentHost write -globalDomain NSStatusItemSelectionPadding 6
+
+# Autohide the Dock
+defaults write com.apple.dock autohide -bool true; killall Dock
+
+# Single tap on trackpad
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
