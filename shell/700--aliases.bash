@@ -40,16 +40,9 @@ command -v sha1sum > /dev/null || alias sha1sum="shasum"
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 
 if [ "$DOTFILES_OS" == "Darwin" ]; then
-  # Hide/show all desktop icons (useful when presenting)
-  alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
-  alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
-
   # Ring the terminal bell, and put a badge on Terminal.app’s Dock icon
   # (useful when executing time-consuming commands)
   alias badge="tput bel"
-
-  # Lock the screen (when going AFK)
-  alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
   function genpassword() {
     local -r length=${1:-22}
@@ -90,13 +83,12 @@ aws-sync-bucket () {
 # prettify JSON
 alias pj="ruby -e \"require 'json'; puts JSON.pretty_generate(JSON.parse(ARGF.read))\""
 
-alias pritunl-client="/Applications/Pritunl.app/Contents/Resources/pritunl-client"
-
 alias bin2json="base64 -d | jq"
 
 alias typeless='history 20000 | sed "s/.*  //"  | sort | uniq -c | sort -g | tail -n 100'
 
-alias e='subl .'
+alias e='code .'
+alias r='rubymine .'
 
 alias diff='diff --side-by-side --suppress-common-lines'
 
