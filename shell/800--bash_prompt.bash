@@ -3,57 +3,75 @@ __git_prompt() {
     local branch_name=""
 
     # check if the current directory is in a git repository
-    if [ $(git rev-parse --is-inside-work-tree &>/dev/null; printf "%s" $?) == 0 ]; then
-
-        # check if the current directory is in .git before running git checks
-        if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]; then
-
-            # ensure index is up to date
-            git update-index --really-refresh  -q &>/dev/null
-
-            # check for uncommitted changes in the index
-            if ! $(git diff --quiet --ignore-submodules --cached); then
-                status="${status}+";
-            fi
-
-            # check for unstaged changes
-            if ! $(git diff-files --quiet --ignore-submodules --); then
-                status="${status}!";
-            fi
-
-            # check for untracked files
-            if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-                status="${status}?";
-            fi
-
-            # check for stashed files
-            if $(git rev-parse --verify refs/stash &>/dev/null); then
-                status="${status}$";
-            fi
-
-        fi
-
-        # get the short symbolic ref
-        # if HEAD isn't a symbolic ref, get the short SHA
-        # otherwise, just give up
-        branch_name="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
-                      git rev-parse --short HEAD 2> /dev/null || \
-                      printf "(unknown)")"
-
-        [ -n "$status" ] && status=" [$status]"
-
-        printf "%s" "${branch_name}${status}"
-    else
+    if ! git rev-parse --is-inside-work-tree &>/dev/null; then
         return
     fi
+
+    # check if the current directory is in .git before running git checks
+    if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]; then
+
+        # REMOVED: git update-index --really-refresh (this is SLOW)
+        # The git status checks below are fast enough without it
+
+        # check for uncommitted changes in the index
+        if ! git diff --quiet --ignore-submodules --cached 2>/dev/null; then
+            status="${status}+";
+        fi
+
+        # check for unstaged changes
+        if ! git diff-files --quiet --ignore-submodules -- 2>/dev/null; then
+            status="${status}!";
+        fi
+
+        # check for untracked files
+        if [ -n "$(git ls-files --others --exclude-standard 2>/dev/null)" ]; then
+            status="${status}?";
+        fi
+
+        # check for stashed files
+        if git rev-parse --verify refs/stash &>/dev/null; then
+            status="${status}$";
+        fi
+
+    fi
+
+    # get the short symbolic ref
+    # if HEAD isn't a symbolic ref, get the short SHA
+    # otherwise, just give up
+    branch_name="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
+                  git rev-parse --short HEAD 2> /dev/null || \
+                  printf "(unknown)")"
+
+    [ -n "$status" ] && status=" [$status]"
+
+    printf "%s" "${branch_name}${status}"
 }
 
 __ruby_version() {
-  command -v rbenv > /dev/null && rbenv local 2> /dev/null
+  command -v rbenv &>/dev/null || return
+  rbenv local 2>/dev/null
 }
 
 __kubectl_context() {
-  command -v kubectl > /dev/null && kubectl config current-context --request-timeout=1s &> /dev/null && kubectl config current-context --request-timeout=1s 2> /dev/null
+    # Skip if kubectl not installed or no config exists
+    command -v kubectl &>/dev/null || return
+    [[ ! -f "${HOME}/.kube/config" ]] && return
+    
+    # Cache kubectl context for 5 seconds to avoid slowness
+    local cache_file="/tmp/ps1_kubectl_context_$$"
+    if [[ -f "${cache_file}" ]] && [[ $(($(date +%s) - $(stat -f %m "${cache_file}" 2>/dev/null || echo 0))) -lt 5 ]]; then
+        cat "${cache_file}"
+        return
+    fi
+    
+    local context=$(kubectl config current-context --request-timeout=100ms 2>/dev/null)
+    echo "${context}" > "${cache_file}" 2>/dev/null
+    echo "${context}"
+}
+
+__pulumi_stack() {
+  [[ ! -f "Pulumi.yaml" ]] && return
+  command -v pulumi > /dev/null && pulumi stack --show-name 2> /dev/null
 }
 
 __battery_status() {
@@ -79,13 +97,25 @@ __battery_status() {
   fi
 }
 
+__set_tab_title() {
+    local title=""
+    if [[ -f ".git/tabtitle" ]]; then
+        title=$(<.git/tabtitle)   # read the file contents
+    else
+        title="${PWD##*/}"        # fallback: current folder name
+    fi
+    echo -ne "\033]0;${title}\a"
+}
+
 __timer_last="0"
 __timer_start() {
   __timer=${__timer:-${SECONDS}}
 }
 __timer_stop() {
-  __timer_last=$((${SECONDS} - ${__timer}))
-  unset __timer
+  if [[ -n "${__timer}" ]]; then
+    __timer_last=$((${SECONDS} - ${__timer}))
+  fi
+  __timer=""
 }
 trap '__timer_start' DEBUG
 
@@ -104,9 +134,6 @@ __bash_prompt() {
   local -r git_prompt="$(__git_prompt)"
   local -r ruby_version="$(__ruby_version)"
   local -r kubectl_context="$(__kubectl_context)"
-
-  source $(dirname $(readlink $HOME/.bashrc))/lib/colors.bash
-  source $(dirname $(readlink $HOME/.bashrc))/lib/nerd_font_icons.bash
 
   ps1+="$(__battery_status)"
 
@@ -158,8 +185,16 @@ __bash_prompt() {
   echo -ne "${ps1}"
 }
 
-PS1="\$(__exit_code=\$?; $(declare -f __bash_prompt); __bash_prompt)"
+source $(dirname $(readlink $HOME/.bashrc))/lib/colors.bash
+source $(dirname $(readlink $HOME/.bashrc))/lib/nerd_font_icons.bash
 
-# Make new shells get the history lines from all previous
-# shells instead of the default "last window closed" history
-PROMPT_COMMAND='history -a; command -v __timer_stop > /dev/null && __timer_stop || true'
+# Store exit code and run prompt function directly - no need to re-declare function each time
+__prompt_command() {
+  __exit_code=$?  # Make it global so __bash_prompt can access it
+  history -a
+  __set_tab_title
+  command -v __timer_stop > /dev/null && __timer_stop || true
+  PS1="$(__bash_prompt)"
+}
+
+PROMPT_COMMAND='__prompt_command'
