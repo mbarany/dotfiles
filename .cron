@@ -1,1 +1,1 @@
-* * * * * PATH="/usr/local/bin:${PATH}" ${HOME}/.crontab/ps1-all
+*/5 * * * * PATH="/usr/local/bin:${PATH}" ${HOME}/.crontab/ps1-all

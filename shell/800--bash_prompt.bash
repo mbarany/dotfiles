@@ -78,21 +78,21 @@ __battery_status() {
   [[ ! -f "/tmp/ps1_battery_status" ]] && return
 
   local -r battery_status="$(cat /tmp/ps1_battery_status)"
-  local battery_status_bar=''
+  local battery_status_bar=""
 
   if [[ -n "${battery_status}" ]]; then
     if [[ "${battery_status}" -le "5" ]]; then
-      battery_status_bar="${__COLORS_BG_BRIGHT_RED}${__COLORS_WHITE} ${__NF_BATTERY_EMPTY}"
+      battery_status_bar="${__COLORS_BG_BRIGHT_RED}${__COLORS_WHITE} ${__ICON_BATTERY_EMPTY}"
     elif [[ "${battery_status}" -le "25" ]]; then
-      battery_status_bar="${__COLORS_BG_ORANGE}${__COLORS_WHITE} ${__NF_BATTERY_QUARTER}"
+      battery_status_bar="${__COLORS_BG_ORANGE}${__COLORS_WHITE} ${__ICON_BATTERY_QUARTER}"
     elif [[ "${battery_status}" -le "50" ]]; then
-      battery_status_bar="${__COLORS_BG_BRIGHT_YELLOW}${__COLORS_BLACK} ${__NF_BATTERY_HALF}"
+      battery_status_bar="${__COLORS_BG_BRIGHT_YELLOW}${__COLORS_BLACK} ${__ICON_BATTERY_HALF}"
     elif [[ "${battery_status}" -le "75" ]]; then
-      battery_status_bar="${__COLORS_BG_GREEN}${__COLORS_BLACK} ${__NF_BATTERY_THREE_QUARTERS}"
+      battery_status_bar="${__COLORS_BG_GREEN}${__COLORS_BLACK} ${__ICON_BATTERY_THREE_QUARTERS}"
     fi
 
     if [[ -n "${battery_status_bar}" ]]; then
-      echo -ne "${battery_status_bar}  ${battery_status}% ${__COLORS_CLEAR}"
+      echo -ne "${battery_status_bar} ${battery_status}% ${__COLORS_CLEAR}"
     fi
   fi
 }
@@ -120,13 +120,8 @@ __timer_stop() {
 trap '__timer_start' DEBUG
 
 __bash_prompt() {
-  if [[ "${USER}" == "root" ]]; then
-    echo "\001$(tput setaf 124)\002   \001$(tput sgr0)\002 "
-    return 0
-  fi
-
   if [[ -z "$(command -v __git_prompt)" ]]; then
-    echo '\u@\h - \w\n$ '
+    echo '\u@\h - \w\n\$ '
     return 0
   fi
 
@@ -138,55 +133,55 @@ __bash_prompt() {
   ps1+="$(__battery_status)"
 
   # username & host
-  ps1+="${__COLORS_BG_PURPLE}${__COLORS_WHITE} ${__NF_USER} \u${__NF_DIVIDER}${__NF_COMPUTER} \h ${__COLORS_CLEAR}"
+  ps1+="${__COLORS_BG_PURPLE}${__COLORS_WHITE}"' \u@\h '"${__COLORS_CLEAR}"
 
   # working directory
-  ps1+="${__COLORS_BG_BLUE}${__COLORS_BLACK} ${__NF_FOLDER} \w ${__COLORS_CLEAR}"
+  ps1+="${__COLORS_BG_BLUE}${__COLORS_BLACK}"' \w '"${__COLORS_CLEAR}"
 
   # kubectl context
   if [[ -n "${kubectl_context}" ]]; then
-    ps1+="${__COLORS_BG_ORANGE}${__COLORS_WHITE} ${__NF_K8S} ${kubectl_context} ${__COLORS_CLEAR}"
+    ps1+="${__COLORS_BG_ORANGE}${__COLORS_WHITE} ${__ICON_K8S} ${kubectl_context} ${__COLORS_CLEAR}"
   fi
 
   # ruby version
   if [[ -n "${ruby_version}" ]]; then
-    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_RUBY} ${ruby_version} ${__COLORS_CLEAR}"
+    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__ICON_RUBY} ${ruby_version} ${__COLORS_CLEAR}"
   fi
 
   # git
   if [[ -n "${git_prompt}" ]]; then
-    ps1+="${__COLORS_BG_GREEN}${__COLORS_BLACK} ${__NF_GIT_BRANCH} ${git_prompt} ${__COLORS_CLEAR}"
+    ps1+="${__COLORS_BG_GREEN}${__COLORS_BLACK} ${__ICON_GIT_BRANCH} ${git_prompt} ${__COLORS_CLEAR}"
   fi
 
   # shell level
   if [[ "${SHLVL}" -gt '1' ]]; then
-    ps1+="${__COLORS_BG_ORANGE}${__COLORS_WHITE} ${__NF_TERMINAL_2} ${SHLVL} ${__COLORS_CLEAR}"
+    ps1+="${__COLORS_BG_CYAN}${__COLORS_WHITE} ${__ICON_TERMINAL_LEVEL} ${SHLVL} ${__COLORS_CLEAR}"
   fi
 
   # number of background jobs
   if [[ -n "$(jobs -p)" ]]; then
-    ps1+="${__COLORS_BG_BRIGHT_YELLOW}${__COLORS_BLACK} ${__NF_BICYCLE} \j ${__COLORS_CLEAR}"
+    ps1+="${__COLORS_BG_BRIGHT_YELLOW}${__COLORS_BLACK} ${__ICON_GEAR}"' \j '"${__COLORS_CLEAR}"
   fi
 
   # execution time of last command
   if [[ "${__timer_last}" -gt '3' ]]; then
-    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_TIMER_SAND}${__timer_last}s ${__COLORS_CLEAR}"
+    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__ICON_TIMER_SAND} ${__timer_last}s ${__COLORS_CLEAR}"
   fi
 
   # shell exit code of last command
   if [[ "${__exit_code}" -ne '0' ]]; then
-    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__NF_BUG} ${__exit_code} ${__COLORS_CLEAR}"
+    ps1+="${__COLORS_BG_RED}${__COLORS_WHITE} ${__ICON_BUG} ${__exit_code} ${__COLORS_CLEAR}"
   fi
 
   ps1+="\n"
 
-  ps1+="${__COLORS_WHITE}${__NF_TERMINAL}${__COLORS_CLEAR}  "
+  ps1+="${__COLORS_WHITE}"'\$'"${__COLORS_CLEAR}  "
 
   echo -ne "${ps1}"
 }
 
 source $(dirname $(readlink $HOME/.bashrc))/lib/colors.bash
-source $(dirname $(readlink $HOME/.bashrc))/lib/nerd_font_icons.bash
+source $(dirname $(readlink $HOME/.bashrc))/lib/icons.bash
 
 # Store exit code and run prompt function directly - no need to re-declare function each time
 __prompt_command() {
@@ -194,7 +189,12 @@ __prompt_command() {
   history -a
   __set_tab_title
   command -v __timer_stop > /dev/null && __timer_stop || true
-  PS1="$(__bash_prompt)"
+
+  if [[ "${USER}" == "root" ]]; then
+    PS1="${__COLORS_RED}"'\w\$'"${__COLORS_CLEAR} "
+  else
+    PS1="$(__bash_prompt)"
+  fi
 }
 
 PROMPT_COMMAND='__prompt_command'
