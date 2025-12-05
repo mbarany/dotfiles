@@ -101,3 +101,5 @@ helm-login-ghcr () {
     --username $username \
     --password-stdin
 }
+
+alias claude='claude --allow-dangerously-skip-permissions'
