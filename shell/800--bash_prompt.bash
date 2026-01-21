@@ -53,20 +53,12 @@ __ruby_version() {
 }
 
 __kubectl_context() {
-    # Skip if kubectl not installed or no config exists
-    command -v kubectl &>/dev/null || return
-    [[ ! -f "${HOME}/.kube/config" ]] && return
-    
-    # Cache kubectl context for 5 seconds to avoid slowness
-    local cache_file="/tmp/ps1_kubectl_context_$$"
-    if [[ -f "${cache_file}" ]] && [[ $(($(date +%s) - $(stat -f %m "${cache_file}" 2>/dev/null || echo 0))) -lt 5 ]]; then
-        cat "${cache_file}"
-        return
-    fi
-    
-    local context=$(kubectl config current-context --request-timeout=100ms 2>/dev/null)
-    echo "${context}" > "${cache_file}" 2>/dev/null
-    echo "${context}"
+  # Skip if kubectl not installed or no config exists
+  [[ ! -f "${HOME}/.kube/config" ]] && return
+
+  awk '
+    $1 == "current-context:" { print $2 }
+  ' ~/.kube/config 2>/dev/null
 }
 
 __pulumi_stack() {
