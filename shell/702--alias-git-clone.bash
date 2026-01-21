@@ -1,5 +1,5 @@
-git-clone () {
-  local -r gihub_repo="${1}"
-  git clone "git@github.com:${gihub_repo}.git"
-  cd $(basename ${gihub_repo})
+git-clone() {
+  local -r github_repo="${1}"
+  git clone "git@github.com:${github_repo}.git"
+  cd "$(basename "${github_repo}")"
 }

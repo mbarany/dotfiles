@@ -1,6 +1,6 @@
 # https://gist.github.com/premek/6e70446cfc913d3c929d7cdbfe896fef
 
-function mv() {
+mv() {
   if [ "$#" -ne 1 ] || [ ! -e "$1" ]; then
     command mv "$@"
     return

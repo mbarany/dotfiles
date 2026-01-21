@@ -26,7 +26,7 @@ generate_ssh_key() {
   echo "This key will be used for GitHub SSH auth and commit signing."
   echo ""
 
-  read -p "Email for ${key_name} key: " email_input
+  read -r -p "Email for ${key_name} key: " email_input
   email_input=${email_input:-$email}
 
   # Generate ed25519 key (modern, secure, and works with GitHub)
@@ -60,7 +60,10 @@ setup_ssh_config() {
   echo "Adding GitHub SSH config..."
 
   # Prepend GitHub config to existing config or create new
-  local temp_config=$(mktemp)
+  local temp_config
+  temp_config=$(mktemp) || { echo "Failed to create temp file"; return 1; }
+  trap 'rm -f "$temp_config"' RETURN
+
   cat > "$temp_config" << EOF
 Host github.com
     IdentityFile ${default_key}
@@ -136,7 +139,7 @@ if [ "$GENERATED_WORK" == "y" ] || [ -f "$WORK_KEY" ]; then
 fi
 echo ""
 
-read -p "Default key [1]: " default_choice
+read -r -p "Default key [1]: " default_choice
 default_choice=${default_choice:-1}
 
 if [ "$default_choice" == "2" ] && ([ "$GENERATED_WORK" == "y" ] || [ -f "$WORK_KEY" ]); then
@@ -155,12 +158,12 @@ setup_ssh_config "$DEFAULT_KEY"
 
 # Setup git signing (allowed signers file)
 if [ -f "$PERSONAL_KEY" ]; then
-  read -p "Email for personal git commits (for allowed signers): " personal_email
+  read -r -p "Email for personal git commits (for allowed signers): " personal_email
   setup_allowed_signers "$PERSONAL_KEY" "$personal_email"
 fi
 
 if [ -f "$WORK_KEY" ]; then
-  read -p "Email for work git commits (for allowed signers): " work_email
+  read -r -p "Email for work git commits (for allowed signers): " work_email
   setup_allowed_signers "$WORK_KEY" "$work_email"
 fi
 
@@ -173,3 +176,4 @@ echo "  2. Test with: ssh -T git@github.com"
 echo ""
 
 unset SSH_DIR PERSONAL_KEY WORK_KEY DEFAULT_KEY DEFAULT_KEY_NAME GENERATED_WORK
+unset -f generate_ssh_key setup_ssh_config setup_allowed_signers

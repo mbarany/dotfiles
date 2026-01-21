@@ -44,7 +44,7 @@ if [ "$DOTFILES_OS" == "Darwin" ]; then
   # (useful when executing time-consuming commands)
   alias badge="tput bel"
 
-  function genpassword() {
+  genpassword() {
     local -r length=${1:-22}
     pwgen --secure --ambiguous --numerals --symbols -1 $length | tee >(pbcopy)
   }
@@ -55,7 +55,7 @@ alias reload="exec $SHELL -l"
 
 # Git
 alias wip="git add -A && git commit --no-verify --no-gpg-sign -m 'WIP'"
-function unwip() {
+unwip() {
     local last_msg=$(git log -1 --pretty=%B)
     if [ "$last_msg" = "WIP" ]; then
         git reset HEAD~1
@@ -75,7 +75,7 @@ alias npm-list-globals="npm -g ls --depth 0"
 
 # AWS
 alias aws-list="aws ec2 describe-instances | jq -r '.Reservations[].Instances[] | \"\(.Tags | map(select(.Key == \"Name\"))[].Value) || \(.State.Name) || \(.PublicDnsName)\"' | column -s $'\t' -t -s '||' | sort"
-aws-sync-bucket () {
+aws-sync-bucket() {
   local bucket_name=$1
 	aws s3 sync s3://${bucket_name} ./${bucket_name}
 }
@@ -92,7 +92,7 @@ alias r='rubymine .'
 
 alias diff='diff --side-by-side --suppress-common-lines'
 
-helm-login-ghcr () {
+helm-login-ghcr() {
   local -r username=$(gh auth status | sed -nE 's/.*account ([^ ]+).*/\1/p')
 
   echo "Logging in to help as '$username'"

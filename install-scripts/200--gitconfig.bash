@@ -30,13 +30,21 @@ if [ ! -f $HOME/.gitconfig ]; then
 
   if [ -n "$DEFAULT_SIGNING_KEY" ]; then
     echo ""
-    echo "Configuring git commit signing with SSH key..."
-    git config --global user.signingkey "$DEFAULT_SIGNING_KEY"
-    git config --global gpg.format ssh
-    git config --global commit.gpgSign true
-    git config --global gpg.ssh.allowedSignersFile "$HOME/.git_allowed_signers"
-    git config --global init.defaultBranch main
-    echo -e "${__COLORS_GREEN}Git signing configured!${__COLORS_CLEAR}"
+    response=$(yes-no "Enable git commit signing with SSH key ($DEFAULT_SIGNING_KEY)?")
+    echo ""
+
+    if [ "$response" == "y" ]; then
+      git config --global user.signingkey "$DEFAULT_SIGNING_KEY"
+      git config --global gpg.format ssh
+      git config --global commit.gpgSign true
+      git config --global gpg.ssh.allowedSignersFile "$HOME/.git_allowed_signers"
+      echo -e "${__COLORS_GREEN}Git signing configured!${__COLORS_CLEAR}"
+    else
+      echo "Skipping git commit signing configuration."
+    fi
+    unset response
   fi
+
+  git config --global init.defaultBranch main
   unset DEFAULT_SIGNING_KEY
 fi

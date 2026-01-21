@@ -11,22 +11,22 @@ set -o pipefail
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DOTFILES_OS="$(uname -s)"
 
-source ${DOTFILES_DIR}/lib/colors.bash
+source "${DOTFILES_DIR}/lib/colors.bash"
 
 # Add Symlinks
-source ${DOTFILES_DIR}/install-symlinks.bash
+source "${DOTFILES_DIR}/install-symlinks.bash"
 
 # Idempotent Install
-for f in ${DOTFILES_DIR}/install-scripts/*; do [[ -f "${f}" ]] && source ${f}; done
+for f in "${DOTFILES_DIR}"/install-scripts/*; do [[ -f "${f}" ]] && source "${f}"; done
 if [ "${DOTFILES_OS}" == "Darwin" ]; then
-  for f in $DOTFILES_DIR/install-scripts/osx/*; do [[ -f "$f" ]] && source $f; done
+  for f in "${DOTFILES_DIR}"/install-scripts/osx/*; do [[ -f "${f}" ]] && source "${f}"; done
 elif [ "${DOTFILES_OS}" == "Linux" ]; then
-  for f in ${DOTFILES_DIR}/install-scripts/linux/*; do [[ -f "${f}" ]] && source ${f}; done
+  for f in "${DOTFILES_DIR}"/install-scripts/linux/*; do [[ -f "${f}" ]] && source "${f}"; done
 fi
 unset f
 
 # Local
-[[ -f "${HOME}/.local/install" ]] && source ${HOME}/.local/install
+[[ -f "${HOME}/.local/install" ]] && source "${HOME}/.local/install"
 
 unset DOTFILES_DIR
 unset DOTFILES_OS
