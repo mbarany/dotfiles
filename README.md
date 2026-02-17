@@ -17,6 +17,15 @@ git clone --recursive https://github.com/mbarany/dotfiles.git ~/.dotfiles
 ## Other Setup
  - [Git PGP Signing Key](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work)
 
+## Post-Install Steps
+These steps require manual action after running the install script:
+ - **Chrome PWAs**: Install PWAs for [YouTube Music](https://music.youtube.com) and [Google Meet](https://meet.google.com)
+ - **Hammerspoon ShiftIt**: Install the [ShiftIt spoon](https://github.com/peterklijn/hammerspoon-shiftit)
+ - **WireGuard**: Install from the [App Store](https://www.wireguard.com/install/)
+ - **Home printer**: Set up home printer in System Settings
+ - **RubyMine**: Install the .env files support plugin
+ - **Google Cloud SDK**: Run `gcloud auth login` to authenticate
+
 ## Custom / Local dotfiles
  - See [Local Directory Structure](#local-directory-structure)
 

@@ -20,4 +20,14 @@ brew-install \
   terraform-docs \
   tylerbrock/saw/saw \
   npm \
-  yarn
+  yarn \
+  fzf \
+  k9s \
+  gh \
+  coreutils \
+  fortio \
+  parallel \
+  pulumi \
+  rbspy
+
+echo -e "${__COLORS_YELLOW}Remember: Run 'gcloud auth login' to authenticate Google Cloud SDK${__COLORS_CLEAR}"

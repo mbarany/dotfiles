@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Directory containing the git repository
+REPO_DIR="$1"
+
+# Check if a directory is provided
+if [ -z "$REPO_DIR" ]; then
+  echo "Usage: $0 <repository_directory>"
+  exit 1
+fi
+
+# Navigate to the repository directory
+cd "$REPO_DIR" || exit 1
+
+# Get the current origin URL
+CURRENT_URL=$(git remote get-url origin)
+
+# Check if the URL is HTTP and replace with SSH using sed
+if [[ "$CURRENT_URL" =~ ^https://github.com/(.+)/(.+)\.git$ ]]; then
+  SSH_URL=$(echo "$CURRENT_URL" | sed -E 's|https://github.com/(.+)/(.+)\.git|git@github.com:\1/\2.git|')
+  
+  echo "Changing remote URL from $CURRENT_URL to $SSH_URL"
+  
+  # Set the new SSH URL
+  git remote set-url origin "$SSH_URL"
+else
+  echo "The origin is not an HTTP GitHub URL or is already set to SSH."
+fi
+
+echo "Done."
+

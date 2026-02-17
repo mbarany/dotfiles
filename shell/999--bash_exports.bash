@@ -25,6 +25,12 @@ if [ "$DOTFILES_OS" == "Linux" ]; then
   export COMMAND_NOT_FOUND_INSTALL_PROMPT=1
 fi
 
+# Android SDK (if installed)
+if [ -d "$HOME/Library/Android/sdk" ]; then
+  export ANDROID_HOME="$HOME/Library/Android/sdk"
+  export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+fi
+
 export PATH
 export PROMPT_COMMAND
 export PS1
