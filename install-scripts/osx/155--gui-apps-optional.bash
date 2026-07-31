@@ -1,3 +1,2 @@
 brew-cask-install-dialog \
-  rubymine "RubyMine" on \
-  android-studio "Android Studio" off \
+  android-studio "Android Studio" off

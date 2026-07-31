@@ -5,8 +5,8 @@ brew-cask-install-dialog \
   whatsapp "WhatsApp" on \
   tuple "Tuple" on \
   pulse-sms "Pulse SMS" on \
-  typora "Typora" on \
   google-drive "Google Drive Backup & Sync" on \
   modern-csv "Modern CSV" on \
-  chatgpt "ChatGPT" on \
+  claude "Claude Desktop" on \
+  firefox "Firefox" on \
   vlc "VLC" on

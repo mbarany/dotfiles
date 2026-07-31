@@ -80,6 +80,42 @@ aws-sync-bucket() {
 	aws s3 sync s3://${bucket_name} ./${bucket_name}
 }
 
+# Pick an AWS profile from ~/.aws/config and SSO login to it
+aws-login() {
+  if [ ! -f "${HOME}/.aws/config" ]; then
+    echo "AWS config file not found at ${HOME}/.aws/config. Exiting."
+    return 1
+  fi
+
+  local -r profiles=$(grep '^\[profile ' "${HOME}/.aws/config" | sed 's/^\[profile \(.*\)\]/\1/')
+
+  if [ -z "${profiles}" ]; then
+    echo "No AWS profiles found in ${HOME}/.aws/config. Exiting."
+    return 1
+  fi
+
+  local selected_profile
+
+  if command -v fzf > /dev/null; then
+    selected_profile=$(echo "${profiles}" | fzf --prompt="Select AWS Profile: " --height=10 --border --ansi)
+  else
+    echo "Available AWS profiles:"
+    select selected_profile in ${profiles}; do
+      [ -n "${selected_profile}" ] && break
+      echo "Invalid selection. Please try again."
+    done
+  fi
+
+  if [ -z "${selected_profile}" ]; then
+    echo "No profile selected. Exiting."
+    return 1
+  fi
+
+  echo "Switching to AWS profile: ${selected_profile}"
+  export AWS_PROFILE="${selected_profile}"
+  aws sso login
+}
+
 # prettify JSON
 alias pj="ruby -e \"require 'json'; puts JSON.pretty_generate(JSON.parse(ARGF.read))\""
 

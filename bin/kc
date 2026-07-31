@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# Get the list of contexts
+contexts=$(kubectl config get-contexts -o name)
+
+# Check if there are any contexts available
+if [ -z "$contexts" ]; then
+  echo "No contexts found. Exiting."
+  exit 1
+fi
+
+# Check if fzf is installed
+if command -v fzf > /dev/null 2>&1; then
+  # Use fzf for interactive context selection
+  selected_context=$(echo "$contexts" | fzf --prompt="Select Kubernetes Context: " --height=10 --border --ansi)
+
+  if [ -n "$selected_context" ]; then
+    echo "Switching to context: $selected_context"
+    kubectl config use-context "$selected_context"
+  else
+    echo "No context selected. Exiting."
+    exit 1
+  fi
+else
+  # Fallback to using select if fzf is not installed
+  echo "fzf is not installed. You can install it using the following command:"
+  echo "    brew install fzf"
+
+  # Display the list of contexts using select
+  echo "Available contexts:"
+  select context in $contexts; do
+    if [ -n "$context" ]; then
+      echo "Switching to context: $context"
+      kubectl config use-context "$context"
+      break
+    else
+      echo "Invalid selection. Please try again."
+    fi
+  done
+fi

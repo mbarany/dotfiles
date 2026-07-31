@@ -1,9 +1,3 @@
-[submodule "submodules/yarn-completion"]
-	path = submodules/yarn-completion
-	url = https://github.com/dsifford/yarn-completion.git
 [submodule "submodules/bashmarks"]
 	path = submodules/bashmarks
 	url = https://github.com/huyng/bashmarks.git
-[submodule "submodules/resty"]
-	path = submodules/resty
-	url = https://github.com/micha/resty.git

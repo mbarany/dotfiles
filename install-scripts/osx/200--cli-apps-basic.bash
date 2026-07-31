@@ -11,7 +11,6 @@ brew-install \
   jq \
   khell/srm/srm \
   mike-engel/jwt-cli/jwt-cli \
-  n \
   oniguruma \
   open-completion \
   pv \
@@ -20,7 +19,6 @@ brew-install \
   terraform-docs \
   tylerbrock/saw/saw \
   npm \
-  yarn \
   fzf \
   k9s \
   gh \
@@ -28,6 +26,16 @@ brew-install \
   fortio \
   parallel \
   pulumi \
-  rbspy
+  rbspy \
+  podman \
+  lazydocker \
+  kubernetes-cli \
+  helm \
+  cloudflared \
+  wireguard-tools \
+  telnet \
+  htop \
+  uv \
+  nvm
 
-echo -e "${__COLORS_YELLOW}Remember: Run 'gcloud auth login' to authenticate Google Cloud SDK${__COLORS_CLEAR}"
+echo -e "${__COLORS_YELLOW}Remember: Run 'gcloud auth login' to authenticate Google Cloud CLI${__COLORS_CLEAR}"
