@@ -14,7 +14,7 @@ This command will let you choose a .gitconfig include for the local git repo. It
 Print a pretty oneline git log with author
 
 # [git-proon](git-proon)
-Finds deleted remote branches and deletes the local references as well as any matching local branches
+Finds deleted remote branches and deletes the local references as well as any matching local branches. A branch checked out in a worktree offers to remove the worktree first, and warns before it does when the worktree is in use by a live `claude` session, holds uncommitted changes, or is locked. Use `--dry-run` to preview without touching anything.
 
 # [git-pull-recursive](git-pull-recursive)
 Does a recursive `git pull`.

@@ -13,7 +13,15 @@ fi
 
 # Completion options
 if [ "${DOTFILES_OS}" == "Darwin" ]; then
-	[[ -d /opt/homebrew/bin && -z "$(echo "${PATH}" | grep '/opt/homebrew/bin')" ]] && PATH="/opt/homebrew/bin:${PATH}"
+	# path_helper appends /etc/paths.d/homebrew after /usr/bin, so brew's bash 5 loses the
+	# lookup to the stock 3.2. Move the entry to the front rather than only adding it when absent.
+	if [[ -d /opt/homebrew/bin ]]; then
+		PATH=":${PATH}:"
+		PATH="${PATH//:\/opt\/homebrew\/bin:/:}"
+		PATH="${PATH#:}"
+		PATH="${PATH%:}"
+		PATH="/opt/homebrew/bin${PATH:+:${PATH}}"
+	fi
 
 	if [ -f $(brew --prefix)/etc/bash_completion ]; then
 		source $(brew --prefix)/etc/bash_completion

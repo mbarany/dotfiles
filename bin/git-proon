@@ -1,61 +1,174 @@
 #!/usr/bin/env bash
 # Finds deleted remote branches and deletes the local references as well as any matching local branches.
 # Branches checked out in another worktree prompt for worktree removal first.
+# Stays bash 3.2 safe: /bin/bash wins the PATH lookup on macOS, so no associative arrays and no mapfile.
+
+readonly REMOTE="origin"
+# Unit separator, not tab: tab is an IFS whitespace character, so runs of tabs collapse
+# into one delimiter and an empty middle field shifts every column after it.
+readonly SEP=$'\x1f'
+readonly RECENT_CLAUDE_ACTIVITY_SECONDS=86400
+
+# "pid<SEP>cwd" for every live claude process. macOS pgrep hides the caller's own ancestors,
+# so enumerate with ps or a git-proon run from inside a claude session misses that session.
+claude_session_cwds() {
+  local pids
+  pids="$(ps -Ao pid=,comm= | awk '{ name = $2; sub(/.*\//, "", name); if (name == "claude") printf "%s,", $1 }')"
+  [[ -n "${pids}" ]] || return 0
+  lsof -a -p "${pids%,}" -d cwd -Fpn 2>/dev/null |
+    awk '/^p/ { pid = substr($0, 2) } /^n/ { print pid "\037" substr($0, 2) }'
+}
+
+CLAUDE_SESSION_CWDS="$(claude_session_cwds)"
+
+claude_pid_in_worktree() {
+  local worktree="$1" pid cwd
+  while IFS="${SEP}" read -r pid cwd; do
+    case "${cwd}" in
+      "${worktree}" | "${worktree}"/*)
+        echo "${pid}"
+        return 0
+        ;;
+    esac
+  done <<< "${CLAUDE_SESSION_CWDS}"
+  return 1
+}
+
+file_mtime_epoch() {
+  stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null
+}
+
+# Claude Code stores transcripts under a directory named after the cwd with every
+# non-alphanumeric character replaced by a dash. Catches sessions that already exited.
+recent_claude_activity() {
+  local worktree="$1" transcript_dir newest mtime age
+  transcript_dir="${HOME}/.claude/projects/$(printf '%s' "${worktree}" | sed 's/[^A-Za-z0-9]/-/g')"
+  newest="$(ls -t "${transcript_dir}"/*.jsonl 2>/dev/null | head -1)"
+  [[ -n "${newest}" ]] || return 1
+  mtime="$(file_mtime_epoch "${newest}")"
+  [[ -n "${mtime}" ]] || return 1
+  age=$(( $(date +%s) - mtime ))
+  [[ "${age}" -lt "${RECENT_CLAUDE_ACTIVITY_SECONDS}" ]] || return 1
+  printf 'claude was last active here %dh%dm ago' "$(( age / 3600 ))" "$(( age % 3600 / 60 ))"
+}
+
+# Everything that makes removing this worktree a bad idea, as one comma-joined line.
+worktree_warnings() {
+  local worktree="$1" warnings="" pid activity
+  if pid="$(claude_pid_in_worktree "${worktree}")"; then
+    warnings="IN USE by a live claude session (pid ${pid})"
+  elif activity="$(recent_claude_activity "${worktree}")"; then
+    warnings="${activity}"
+  fi
+  if [[ -n "$(git -C "${worktree}" status --porcelain 2>/dev/null)" ]]; then
+    warnings="${warnings:+${warnings}, }uncommitted changes"
+  fi
+  if [[ -f "$(git -C "${worktree}" rev-parse --git-dir 2>/dev/null)/locked" ]]; then
+    warnings="${warnings:+${warnings}, }locked"
+  fi
+  echo "${warnings}"
+}
 
 main() {
-  local -r remote="origin"
-  git fetch --prune "${remote}"
+  local dry_run=0
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -n | --dry-run) dry_run=1 ;;
+      -h | --help)
+        echo "usage: git-proon [-n|--dry-run]"
+        return 0
+        ;;
+      *)
+        echo "git-proon: unknown option '$1'" >&2
+        return 2
+        ;;
+    esac
+    shift
+  done
+
+  # Every prompt below defaults to yes, so a non-terminal stdin would delete everything unattended.
+  if [[ "${dry_run}" -eq 0 && ! -t 0 ]]; then
+    echo "git-proon needs an interactive terminal: stdin is not a tty. Use --dry-run to preview." >&2
+    return 1
+  fi
+
+  if ! git fetch --prune "${REMOTE}"; then
+    if [[ "${dry_run}" -eq 0 ]]; then
+      echo "git-proon: 'git fetch --prune ${REMOTE}' failed, so [gone] is unreliable. Refusing to delete." >&2
+      return 1
+    fi
+    echo "git-proon: fetch failed, previewing against possibly stale tracking refs." >&2
+  fi
   git worktree prune
 
-  local -A candidates
-  local -A worktrees
-  local branch upstream track worktree
-
-  local current_branch
+  local current_branch branch upstream track worktree
   current_branch="$(git branch --show-current)"
 
-  local -a remote_refs
-  mapfile -t remote_refs < <(git branch -r | sed 's/^ *//' | sed "s|^${remote}/||")
+  local -a candidates
+  candidates=()
 
-  while IFS=$'\t' read -r branch upstream track worktree; do
+  while IFS="${SEP}" read -r branch upstream track worktree; do
     [[ -n "${branch}" ]] || continue
-    [[ "${branch}" == "${current_branch}" ]] && continue
 
     if [[ -n "${upstream}" ]]; then
       # Has an upstream: candidate only if it's gone
       [[ "${track}" == "[gone]" ]] || continue
     else
       # No upstream: candidate only if no matching remote branch exists
-      local found=0
-      for ref in "${remote_refs[@]}"; do
-        if [[ "${ref}" == "${branch}" ]]; then
-          found=1
-          break
-        fi
-      done
-      [[ ${found} -eq 0 ]] || continue
+      git show-ref --verify --quiet "refs/remotes/${REMOTE}/${branch}" && continue
     fi
 
-    candidates["${branch}"]=1
-    [[ -n "${worktree}" ]] && worktrees["${branch}"]="${worktree}"
-  done < <(git for-each-ref refs/heads --format='%(refname:short)%09%(upstream)%09%(upstream:track)%09%(worktreepath)')
+    if [[ "${branch}" == "${current_branch}" ]]; then
+      echo "Skipping '${branch}': it is the branch you have checked out here" >&2
+      continue
+    fi
 
-  local prompt_response
-  for branch in "${!candidates[@]}"; do
-    if [[ -n "${worktrees[${branch}]:-}" ]]; then
-      read -r -p "Remove worktree '${worktrees[${branch}]}' and branch '${branch}'? [Y/n] " prompt_response
-      if [[ "${prompt_response}" == 'n' || "${prompt_response}" == 'N' ]]; then
+    candidates+=("${branch}${SEP}${worktree}")
+  done < <(git for-each-ref refs/heads --format='%(refname:short)%1f%(upstream)%1f%(upstream:track)%1f%(worktreepath)')
+
+  if [[ "${#candidates[@]}" -eq 0 ]]; then
+    echo "Nothing to prune."
+    return 0
+  fi
+
+  local entry warnings prompt_response
+  local -a remove_args
+  for entry in "${candidates[@]}"; do
+    branch="${entry%%${SEP}*}"
+    worktree="${entry#*${SEP}}"
+
+    if [[ -z "${worktree}" ]]; then
+      if [[ "${dry_run}" -eq 1 ]]; then
+        echo "would delete branch '${branch}'"
         continue
       fi
-      if ! git worktree remove "${worktrees[${branch}]}"; then
-        echo "Skipping '${branch}': worktree removal failed (dirty? try 'git worktree remove --force ${worktrees[${branch}]}')" >&2
-        continue
-      fi
-    else
       read -r -p "Remove branch '${branch}'? [Y/n] " prompt_response
-      if [[ "${prompt_response}" == 'n' || "${prompt_response}" == 'N' ]]; then
-        continue
-      fi
+      [[ "${prompt_response}" == [nN]* ]] && continue
+      git branch -D "${branch}"
+      continue
+    fi
+
+    warnings="$(worktree_warnings "${worktree}")"
+
+    if [[ "${dry_run}" -eq 1 ]]; then
+      echo "would remove worktree '${worktree}' and branch '${branch}'${warnings:+ [${warnings}]}"
+      continue
+    fi
+
+    remove_args=()
+    if [[ -n "${warnings}" ]]; then
+      echo "Worktree '${worktree}': ${warnings}" >&2
+      read -r -p "Force-remove it and branch '${branch}' anyway? [y/N] " prompt_response
+      [[ "${prompt_response}" == [yY]* ]] || continue
+      remove_args=(--force)
+    else
+      read -r -p "Remove worktree '${worktree}' and branch '${branch}'? [Y/n] " prompt_response
+      [[ "${prompt_response}" == [nN]* ]] && continue
+    fi
+
+    if ! git worktree remove "${remove_args[@]}" "${worktree}"; then
+      echo "Skipping '${branch}': worktree removal failed" >&2
+      continue
     fi
     git branch -D "${branch}"
   done
